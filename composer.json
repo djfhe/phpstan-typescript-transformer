@@ -1,0 +1,30 @@
+{
+  "name": "danielthoma/controller_transformer",
+  "type": "library",
+  "license": "MIT",
+  "version": "0.0.1",
+  "require-dev": {
+    "php": "^8.2",
+    "phpstan/phpstan-src": "2.1.x-dev",
+    "jetbrains/phpstorm-stubs": "dev-master#7385d3075dc365911c4a3168fa762de6aa4550c9",
+    "react/child-process": "0.7.x-dev"
+  },
+  "autoload": {
+    "psr-4": {
+      "ControllerTransformer\\": "src/"
+    }
+  },
+  "authors": [
+    {
+      "name": "Daniel Thoma",
+      "email": "dt@clickbar.dev"
+    }
+  ],
+  "minimum-stability": "stable",
+  "repositories": [
+    {
+      "url": "https://github.com/phpstan/phpstan-src.git",
+      "type": "git"
+    }
+  ]
+}

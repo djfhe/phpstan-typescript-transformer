@@ -1,0 +1,7 @@
+/vendor
+/auth.json
+/.fleet
+/.idea
+/.vscode
+.DS_Store
+.cache
