@@ -1,0 +1,11 @@
+parameters:
+    customRulesetUsed: true
+    errorFormat: extractor
+  
+services:
+  errorFormatter.extractor:
+    class: djfhe\ControllerTransformer\PHPStan\ErrorFormatter
+  - 
+    class: djfhe\ControllerTransformer\PHPStan\ControllerMethodReturnTypeRule
+    tags:
+      - phpstan.rules.rule
