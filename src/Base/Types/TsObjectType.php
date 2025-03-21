@@ -8,8 +8,22 @@ class TsObjectType extends _TsType
 {
     public function __construct(
       /** @var array<TsObjectPropertyType> */
-      protected array $properties
+      protected array $properties = [],
     ) {}
+
+    public function add(TsObjectPropertyType $property) {
+        $this->properties[] = $property;
+    }
+
+    public function get(int $index): TsObjectPropertyType
+    {
+        return $this->properties[$index];
+    }
+
+    public function count(): int
+    {
+        return count($this->properties);
+    }
 
     public function definitionKeyword(): string
     {

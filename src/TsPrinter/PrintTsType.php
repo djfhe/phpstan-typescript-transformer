@@ -1,0 +1,59 @@
+<?php
+
+namespace djfhe\StanScript\TsPrinter;
+
+use djfhe\StanScript\_TsType;
+use PHPStan\Analyser\Error;
+use PHPStan\Rules\RuleError;
+use PHPStan\Rules\RuleErrorBuilder;
+
+final class PrintTsType
+{
+
+  public static string $error_identifier = 'djfhe.StanScript.printTsType';
+
+    public function __construct(
+      public string $namespace,
+      public string $name,
+      public _TsType $type,
+    ) { }
+
+    public static function create(
+      string $namespace,
+      string $name,
+      _TsType $type,
+    ): self {
+      return new self($namespace, $name, $type);
+    }
+
+    public function toPHPStanError(): RuleError
+    {
+        return RuleErrorBuilder::message('')
+          ->identifier(self::$error_identifier)
+          ->metadata([
+            'namespace' => $this->namespace,
+            'name' => $this->name,
+            'type' => $this->type->serialize(),
+          ])
+          ->build();
+    }
+
+    public static function fromPHPStanError(Error $error): self
+    {
+        $metadata = $error->getMetadata();
+
+        return new self(
+            $metadata['namespace'],
+            $metadata['name'],
+            _TsType::deserialize($metadata['type'])
+        );
+    }
+
+    /**
+     * @return _TsType[]
+     */
+    public function getRecursiveChildren(): array
+    {
+        return $this->type->getRecursiveChildren();
+    }
+}

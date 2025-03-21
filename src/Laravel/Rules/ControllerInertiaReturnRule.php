@@ -4,7 +4,10 @@ declare(strict_types=1);
 
 namespace djfhe\StanScript\Laravel\Rules;
 
+use djfhe\StanScript\Base\Types\TsObjectType;
+use djfhe\StanScript\Base\Types\TsUnionType;
 use djfhe\StanScript\ControllerFunctionReturns;
+use djfhe\StanScript\TsPrinter\PrintTsType;
 use djfhe\StanScript\TsTransformer;
 use PhpParser\Node;
 use PHPStan\Analyser\Scope;
@@ -67,11 +70,8 @@ class ControllerInertiaReturnRule implements \PHPStan\Rules\Rule
         if (count($args) === 0) {
             return [];
         }
-        
-        $className = $scope->getClassReflection()->getName();
-        $methodName = $node->getMethodName();
 
-        $functionReturnTypeContainer = new ControllerFunctionReturns($className, $methodName);
+        $returnUnionType = new TsUnionType([]);
         
         foreach ($args as $arg) {
             $returnValue = $arg[0];
@@ -79,18 +79,27 @@ class ControllerInertiaReturnRule implements \PHPStan\Rules\Rule
 
             $type = TsTransformer::transformExpression($returnValue, $returnScope, $this->reflectionProvider);
             
-            $functionReturnTypeContainer->add($type);
+            $returnUnionType->add($type);
 
         }
-        if ($functionReturnTypeContainer->count() === 0) {
-            return [];
+        
+        $className = $scope->getClassReflection()->getName();
+        $methodName = $node->getMethodName();
+
+        if ($returnUnionType->count() === 0) {
+            return [
+                PrintTsType::create($className, $methodName, new TsObjectType())->toPHPStanError(),
+            ];
+        }
+
+        if ($returnUnionType->count() === 1) {
+            return [
+                PrintTsType::create($className, $methodName, $returnUnionType->get(0))->toPHPStanError(),
+            ];
         }
 
         return [
-          RuleErrorBuilder::message('')
-            ->identifier(ControllerFunctionReturns::$error_identifier)
-            ->metadata($functionReturnTypeContainer->serialize())
-            ->build()
+            PrintTsType::create($className, $methodName, $returnUnionType),
         ];
     }
 

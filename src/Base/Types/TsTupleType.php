@@ -7,9 +7,23 @@ use djfhe\StanScript\_TsType;
 class TsTupleType extends _TsType
 {
     public function __construct(
-      /** @var array<_TsType> */
-      protected array $types
+        /** @var array<_TsType> */
+        protected array $types = [],
     ) {}
+
+    public function add(_TsType $type) {
+        $this->types[] = $type;
+    }
+
+    public function get(int $index): _TsType
+    {
+        return $this->types[$index];
+    }
+
+    public function count(): int
+    {
+        return count($this->types);
+    }
 
     public function toTypeDefinition(bool $inline): string
     {

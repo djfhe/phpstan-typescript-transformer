@@ -30,33 +30,12 @@ class TsTransformer
       self::$registra[] = $transformer;
     }
 
-    public static function autoload(): void
-    {
-      self::autoloadTypes();
-      self::autoloadParsers();
-    }
-
-    protected static function autoloadTypes(): void
-    {
-      foreach (glob(__DIR__ . '/TypescriptTypes/{*,*/*}.php', GLOB_BRACE) as $file) {
-        require_once $file;
-      }
-    }
-
-    protected static function autoloadParsers(): void
-    {
-      foreach (glob(__DIR__ . '/TypescriptParser/{*,*/*}.php', GLOB_BRACE) as $file) {
-        require_once $file;
-      }
-    }
 
     protected static function init(): void
     {
       if (!empty(self::$registra)) {
         return;
       }
-
-      //self::autoload();
 
       // get classes implementing _TsTypeParserContract
       $classes = get_declared_classes();

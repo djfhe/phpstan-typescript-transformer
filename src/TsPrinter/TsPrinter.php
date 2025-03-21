@@ -21,12 +21,11 @@ class TsPrinter implements \PHPStan\Command\ErrorFormatter\ErrorFormatter
         $typesWithIdentifiers = [];
 
         foreach ($analysisResult->getFileSpecificErrors() as $error) {
-            if ($error->getIdentifier() !== ControllerFunctionReturns::$error_identifier) {
+            if ($error->getIdentifier() !== PrintTsType::$error_identifier) {
                 continue;
             }
 
-            $metadata = $error->getMetadata();
-            $container = ControllerFunctionReturns::deserialize($metadata);
+            $container = PrintTsType::fromPHPStanError($error);
 
             $types = $container->getRecursiveChildren();
 
@@ -80,7 +79,7 @@ class TsPrinter implements \PHPStan\Command\ErrorFormatter\ErrorFormatter
         }
 
         foreach ($returnTypes as $return) {
-            [$namespace, $typeDefinition] = $this->controllerEndpointToTypescriptDefinition($return, $classMapper, $identifierMapper);
+            [$namespace, $typeDefinition] = $this->printTsTypeToTypescriptDefinition($return, $classMapper, $identifierMapper);
 
             if (!isset($namespaces[$namespace])) {
                 $namespaces[$namespace] = [
@@ -147,27 +146,17 @@ class TsPrinter implements \PHPStan\Command\ErrorFormatter\ErrorFormatter
      * 
      * @return [string, string]
      */
-    protected function controllerEndpointToTypescriptDefinition(ControllerFunctionReturns $return, \Closure $classMapper, \Closure $identifierMapper): array
+    protected function printTsTypeToTypescriptDefinition(PrintTsType $return, \Closure $classMapper, \Closure $identifierMapper): array
     {
-        $namespace = $classMapper($return->class);
-        $methodName = $return->methodName;
-
-        if (count($return->returns) === 1) {
-            $keyword = $return->returns[0]->definitionKeyword();
-            $code = $return->returns[0]->toTypeDefinition(false);
-            $code = $identifierMapper($code);
-
-            $typeDefinition = $this->createTsDefinition($keyword, $methodName, $code);
-
-            return [$namespace, $typeDefinition];
-        }
-
-        $code = implode(' | ', array_map(fn( $type) => $identifierMapper($type->toTypeString(false)), $return->returns));
+        $typeNamespace = $classMapper($return->namespace);
+        $typeName = $return->name;
+        $keyword = $return->type->definitionKeyword();
+        $code = $return->type->toTypeDefinition(false);
         $code = $identifierMapper($code);
 
-        $typeDefinition = $this->createTsDefinition('type', $methodName, $code);
+        $typeDefinition = $this->createTsDefinition($keyword, $typeName, $code);
 
-        return [$namespace, $typeDefinition];
+        return [$typeNamespace, $typeDefinition];
     }
 
     /**
