@@ -15,7 +15,7 @@ class TsTransformer
   /**
    * @var array<class-string<_TsTypeTransformerContract>,_TsTypeTransformerContract>
    */
-  protected static array $registra = [];
+  protected static array $registrar = [];
   protected static ?SplObjectStorage $cache = null;
 
   /**
@@ -23,17 +23,17 @@ class TsTransformer
    */
     public static function register(string $transformer): void
     {
-      if (in_array($transformer, self::$registra)) {
+      if (in_array($transformer, self::$registrar)) {
         return;
       }
 
-      self::$registra[] = $transformer;
+      self::$registrar[] = $transformer;
     }
 
 
     protected static function init(): void
     {
-      if (!empty(self::$registra)) {
+      if (!empty(self::$registrar)) {
         return;
       }
 
@@ -78,7 +78,7 @@ class TsTransformer
       }
 
       $candidates = [];
-      foreach (self::$registra as $transformer) {
+      foreach (self::$registrar as $transformer) {
         if ($transformer::canTransform($type, $scope, $reflectionProvider)) {
           $candidates[] = $transformer;
         }
