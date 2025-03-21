@@ -6,7 +6,7 @@ use djfhe\StanScript\TsType;
 
 class TsNeverType extends TsType
 {
-    public function toTypeDefinition(bool $inline): string
+    public function typeDefinition(): string
     {
         return 'never';
     }

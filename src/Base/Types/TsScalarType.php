@@ -11,7 +11,7 @@ class TsScalarType extends TsType
         protected string $value
     ) {}
 
-    public function toTypeDefinition(bool $inline): string
+    public function typeDefinition(): string
     {
         return $this->value;
     }

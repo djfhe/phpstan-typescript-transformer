@@ -8,9 +8,9 @@ class TsAbstractPaginatedType extends TsType
 {
     public function __construct(private TsType $itemType) {}
 
-    public function toTypeDefinition(bool $inline): string
+    public function typeDefinition(): string
     {
-      $itemTsType = $this->itemType->toTypeString($inline);
+      $itemTsType = $this->itemType->printTypeString();
       
       $paginationLink = '{ active: boolean; label: string; url: string | null; }';
       $paginated = "{ current_page: number; data: {$itemTsType}[]; first_page_url: string; from: number; last_page: number; last_page_url: string; links: {$paginationLink}[]; next_page_url: string | null; path: string; per_page: number; prev_page_url: string | null; to: number; total: number; }";

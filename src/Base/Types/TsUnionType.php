@@ -25,9 +25,9 @@ class TsUnionType extends TsType
         return count($this->types);
     }
 
-    public function toTypeDefinition(bool $inline): string
+    public function typeDefinition(): string
     {
-        return '(' . implode(' | ', array_map(fn(TsType $type) => $type->toTypeString($inline), $this->types)) . ')';
+        return '(' . implode(' | ', array_map(fn(TsType $type) => $type->printTypeString(), $this->types)) . ')';
     }
 
     protected function getChildren(): array

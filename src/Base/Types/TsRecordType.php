@@ -11,9 +11,9 @@ class TsRecordType extends TsType
       protected TsType $valueType,
     ) {}
 
-    public function toTypeDefinition(bool $inline): string
+    public function typeDefinition(): string
     {
-        return "Record<{$this->keyType->toTypeString($inline)}, {$this->valueType->toTypeString($inline)}>";
+        return "Record<{$this->keyType->printTypeString()}, {$this->valueType->printTypeString()}>";
     }
 
     protected function getChildren(): array

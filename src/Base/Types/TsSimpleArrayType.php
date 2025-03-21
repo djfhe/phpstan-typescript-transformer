@@ -13,9 +13,9 @@ class TsSimpleArrayType extends TsType
       protected TsType $valueType
     ) {}
 
-    public function toTypeDefinition(bool $inline): string
+    public function typeDefinition(): string
     {
-        return "{$this->valueType->toTypeString($inline)}[]";
+        return "{$this->valueType->printTypeString()}[]";
     }
 
     protected function getChildren(): array

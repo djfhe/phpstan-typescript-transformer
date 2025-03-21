@@ -7,7 +7,7 @@ use djfhe\StanScript\TsType;
 class TsObjectType extends TsType
 {
     public function __construct(
-      /** @var array<TsObjectPropertyType> */
+      /** @var TsObjectPropertyType[] */
       protected array $properties = [],
     ) {}
 
@@ -30,11 +30,11 @@ class TsObjectType extends TsType
         return "interface";
     }
 
-    public function toTypeDefinition(bool $inline): string
+    public function typeDefinition(): string
     {
         $properties = [];
         foreach ($this->properties as $value) {
-            $properties[] = $value->toTypeString($inline);
+            $properties[] = $value->printTypeString();
         }
 
         return "{ " . implode("; ", $properties) . " }";

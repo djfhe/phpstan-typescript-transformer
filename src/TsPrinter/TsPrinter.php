@@ -151,7 +151,7 @@ class TsPrinter implements \PHPStan\Command\ErrorFormatter\ErrorFormatter
         $typeNamespace = $classMapper($return->namespace);
         $typeName = $return->name;
         $keyword = $return->type->definitionKeyword();
-        $code = $return->type->toTypeDefinition(false);
+        $code = $return->type->toTypeDefinition();
         $code = $identifierMapper($code);
 
         $typeDefinition = $this->createTsDefinition($keyword, $typeName, $code);
@@ -168,7 +168,7 @@ class TsPrinter implements \PHPStan\Command\ErrorFormatter\ErrorFormatter
     protected function typesWithIdentifierToTypescriptDefinition(string $identifier, TsType $type, \Closure $classMapper, \Closure $identifierMapper): array
     {
         $identifier = $classMapper($identifier);
-        $typeDefinition = $identifierMapper($type->toTypeDefinition(false));
+        $typeDefinition = $identifierMapper($type->toTypeDefinition());
 
         [$namespace, $name] = $this->getNamespaceAndNameFromIdentifier($identifier);
         

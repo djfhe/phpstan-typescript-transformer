@@ -12,9 +12,9 @@ class TsObjectPropertyType extends TsType
         public bool $optional = false
     ) {}
 
-    public function toTypeDefinition(bool $inline): string
+    public function typeDefinition(): string
     {
-        return $this->key . ($this->optional ? '?' : '') . ': ' . $this->value->toTypeString($inline);
+        return $this->key . ($this->optional ? '?' : '') . ': ' . $this->value->printTypeString();
     }
 
     protected function getChildren(): array

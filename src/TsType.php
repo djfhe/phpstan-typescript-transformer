@@ -17,15 +17,15 @@ abstract class TsType {
     return $this;
   }
 
-  public abstract function toTypeDefinition(bool $inline): string;
+  public abstract function typeDefinition(): string;
 
-  final public function toTypeString(bool $inline): string
+  final public function printTypeString(): string
   {
-    if (!$inline && $this->identifier !== null) {
+    if ($this->identifier !== null) {
       return '{%' . $this->identifier . '%}';
     }
 
-    return $this->toTypeDefinition($inline);
+    return $this->typeDefinition();
   }
 
   /**
