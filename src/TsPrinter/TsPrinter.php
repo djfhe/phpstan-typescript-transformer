@@ -8,10 +8,18 @@ use djfhe\StanScript\TsType;
 use djfhe\StanScript\ControllerFunctionReturns;
 use PHPStan\Command\AnalysisResult;
 use PHPStan\Command\Output;
+use SplObjectStorage;
 
 class TsPrinter implements \PHPStan\Command\ErrorFormatter\ErrorFormatter
 {
+    public static SplObjectStorage $printingTypesStack;
+
     public function __construct() {}
+
+    protected static function resetPrintingTypesStack(): void
+    {
+        self::$printingTypesStack = new SplObjectStorage();
+    }
 
     public function formatErrors(AnalysisResult $analysisResult, Output $output): int
     {
@@ -151,7 +159,8 @@ class TsPrinter implements \PHPStan\Command\ErrorFormatter\ErrorFormatter
         $typeNamespace = $classMapper($return->namespace);
         $typeName = $return->name;
         $keyword = $return->type->definitionKeyword();
-        $code = $return->type->toTypeDefinition();
+        $this->resetPrintingTypesStack();
+        $code = $return->type->typeDefinition();
         $code = $identifierMapper($code);
 
         $typeDefinition = $this->createTsDefinition($keyword, $typeName, $code);
@@ -168,7 +177,8 @@ class TsPrinter implements \PHPStan\Command\ErrorFormatter\ErrorFormatter
     protected function typesWithIdentifierToTypescriptDefinition(string $identifier, TsType $type, \Closure $classMapper, \Closure $identifierMapper): array
     {
         $identifier = $classMapper($identifier);
-        $typeDefinition = $identifierMapper($type->toTypeDefinition());
+        $this->resetPrintingTypesStack();
+        $typeDefinition = $identifierMapper($type->typeDefinition());
 
         [$namespace, $name] = $this->getNamespaceAndNameFromIdentifier($identifier);
         

@@ -2,6 +2,8 @@
 
 namespace djfhe\StanScript;
 
+use djfhe\StanScript\TsPrinter\TsPrinter;
+
 abstract class TsType {
 
   private ?string $identifier = null;
@@ -24,6 +26,12 @@ abstract class TsType {
     if ($this->identifier !== null) {
       return '{%' . $this->identifier . '%}';
     }
+
+    if (TsPrinter::$printingTypesStack->contains($this)) {
+      throw new \Exception('Circular reference detected in type definition.');
+    }
+
+    TsPrinter::$printingTypesStack->attach($this);
 
     return $this->typeDefinition();
   }
