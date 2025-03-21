@@ -2,9 +2,9 @@
 
 namespace djfhe\StanScript\Base\Types;
 
-use djfhe\StanScript\_TsType;
+use djfhe\StanScript\TsType;
 
-class TsObjectType extends _TsType
+class TsObjectType extends TsType
 {
     public function __construct(
       /** @var array<TsObjectPropertyType> */

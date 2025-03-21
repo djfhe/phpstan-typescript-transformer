@@ -2,11 +2,11 @@
 
 namespace djfhe\StanScript\PHPStan\Typescript\TypescriptTypes\Laravel;
 
-use djfhe\StanScript\_TsType;
+use djfhe\StanScript\TsType;
 
-class TsAbstractPaginatedType extends _TsType
+class TsAbstractPaginatedType extends TsType
 {
-    public function __construct(private _TsType $itemType) {}
+    public function __construct(private TsType $itemType) {}
 
     public function toTypeDefinition(bool $inline): string
     {
@@ -28,7 +28,7 @@ class TsAbstractPaginatedType extends _TsType
 
     protected static function _deserialize(array $data): static
     {
-        return new self(_TsType::deserialize($data['itemType']));
+        return new self(TsType::deserialize($data['itemType']));
     }
 
     protected function getChildren(): array

@@ -2,20 +2,20 @@
 
 namespace djfhe\StanScript\Base\Types;
 
-use djfhe\StanScript\_TsType;
+use djfhe\StanScript\TsType;
 
-class TsUnionType extends _TsType
+class TsUnionType extends TsType
 {
     public function __construct(
-        /** @var _TsType[] */
+        /** @var TsType[] */
         protected array $types = [],
     ) {}
 
-    public function add(_TsType $type) {
+    public function add(TsType $type) {
         $this->types[] = $type;
     }
 
-    public function get(int $index): _TsType
+    public function get(int $index): TsType
     {
         return $this->types[$index];
     }
@@ -27,20 +27,20 @@ class TsUnionType extends _TsType
 
     public function toTypeDefinition(bool $inline): string
     {
-        return '(' . implode(' | ', array_map(fn(_TsType $type) => $type->toTypeString($inline), $this->types)) . ')';
+        return '(' . implode(' | ', array_map(fn(TsType $type) => $type->toTypeString($inline), $this->types)) . ')';
     }
 
 
     protected function _serialize(): array
     {
         return [
-            'types' => array_map(fn(_TsType $type) => $type->serialize(), $this->types)
+            'types' => array_map(fn(TsType $type) => $type->serialize(), $this->types)
         ];
     }
 
     protected static function _deserialize(array $data): static
     {
-        return new self(array_map(fn($type) => _TsType::deserialize($type), $data['types']));
+        return new self(array_map(fn($type) => TsType::deserialize($type), $data['types']));
     }
 
     protected function getChildren(): array

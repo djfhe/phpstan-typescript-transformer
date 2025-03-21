@@ -2,18 +2,18 @@
 
 namespace djfhe\StanScript\LaravelData\Transformer;
 
-use djfhe\StanScript\_TsTypeTransformerContract;
+use djfhe\StanScript\TsTypeTransformerContract;
 use PHPStan\Type\Type;
 use PHPStan\Analyser\Scope;
 use PHPStan\Reflection\ReflectionProvider;
-use djfhe\StanScript\_TsType;
+use djfhe\StanScript\TsType;
 use djfhe\StanScript\Base\Types\TsObjectPropertyType;
 use djfhe\StanScript\Base\Types\TsObjectType;
 use djfhe\StanScript\TsTransformer;
 use PHPStan\Analyser\OutOfClassScope;
 use ReflectionProperty;
 
-class LaravelDataParser implements _TsTypeTransformerContract
+class LaravelDataParser implements TsTypeTransformerContract
 {
     public static function canTransform(Type $type, Scope $scope, ReflectionProvider $reflectionProvider): bool {
 
@@ -138,7 +138,7 @@ class LaravelDataParser implements _TsTypeTransformerContract
       return new TsObjectPropertyType($name, $tsType);
     }
 
-    protected static function parseLiteralTypescriptAttribute(array $attributes, Scope $scope, ReflectionProvider $reflectionProvider): ?_TsType {
+    protected static function parseLiteralTypescriptAttribute(array $attributes, Scope $scope, ReflectionProvider $reflectionProvider): ?TsType {
       if (empty($attributes)) {
         return null;
       }

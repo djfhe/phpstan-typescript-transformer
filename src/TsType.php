@@ -2,7 +2,7 @@
 
 namespace djfhe\StanScript;
 
-abstract class _TsType {
+abstract class TsType {
 
   private ?string $identifier = null;
 
@@ -46,7 +46,7 @@ abstract class _TsType {
   }
 
   /**
-   * @return _TsType[]
+   * @return TsType[]
    */
   protected abstract function getChildren(): array;
 

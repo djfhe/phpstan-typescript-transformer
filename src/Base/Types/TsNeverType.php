@@ -2,9 +2,9 @@
 
 namespace djfhe\StanScript\Base\Types;
 
-use djfhe\StanScript\_TsType;
+use djfhe\StanScript\TsType;
 
-class TsNeverType extends _TsType
+class TsNeverType extends TsType
 {
     public function toTypeDefinition(bool $inline): string
     {

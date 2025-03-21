@@ -2,8 +2,8 @@
 
 namespace djfhe\StanScript;
 
-use djfhe\StanScript\_TsType;
-use djfhe\StanScript\_TsTypeTransformerContract;
+use djfhe\StanScript\TsType;
+use djfhe\StanScript\TsTypeTransformerContract;
 use PHPStan\Analyser\Scope;
 use PHPStan\Reflection\ReflectionProvider;
 use PHPStan\Type\Type;
@@ -13,13 +13,13 @@ use SplObjectStorage;
 class TsTransformer
 {
   /**
-   * @var array<class-string<_TsTypeTransformerContract>,_TsTypeTransformerContract>
+   * @var array<class-string<TsTypeTransformerContract>,TsTypeTransformerContract>
    */
   protected static array $registrar = [];
   protected static ?SplObjectStorage $cache = null;
 
   /**
-   * @param class-string<_TsTypeTransformerContract> $class
+   * @param class-string<TsTypeTransformerContract> $class
    */
     public static function register(string $transformer): void
     {
@@ -37,13 +37,13 @@ class TsTransformer
         return;
       }
 
-      // get classes implementing _TsTypeParserContract
+      // get classes implementing TsTypeParserContract
       $classes = get_declared_classes();
 
       
       foreach ($classes as $class) {
 
-        if (!in_array(_TsTypeTransformerContract::class, class_implements($class, _TsTypeTransformerContract::class), true)) {
+        if (!in_array(TsTypeTransformerContract::class, class_implements($class, TsTypeTransformerContract::class), true)) {
           continue;
         }
 
@@ -60,14 +60,14 @@ class TsTransformer
       return self::$cache;
     }
 
-    public static function transformExpression(\PhpParser\Node\Expr $expr, Scope $scope, ReflectionProvider $reflectionProvider): _TsType
+    public static function transformExpression(\PhpParser\Node\Expr $expr, Scope $scope, ReflectionProvider $reflectionProvider): TsType
     {
       $type = $scope->getType($expr);
 
       return self::transform($type, $scope, $reflectionProvider);
     }
 
-    public static function transform(Type $type, Scope $scope, ReflectionProvider $reflectionProvider): _TsType
+    public static function transform(Type $type, Scope $scope, ReflectionProvider $reflectionProvider): TsType
     {
       self::init();
 

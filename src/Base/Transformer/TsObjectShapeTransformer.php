@@ -2,7 +2,7 @@
 
 namespace djfhe\StanScript\Base\Transformer;
 
-use djfhe\StanScript\_TsTypeTransformerContract;
+use djfhe\StanScript\TsTypeTransformerContract;
 use djfhe\StanScript\Base\Types\TsObjectPropertyType;
 use djfhe\StanScript\Base\Types\TsObjectType;
 use djfhe\StanScript\TsTransformer;
@@ -10,7 +10,7 @@ use PHPStan\Type\Type;
 use PHPStan\Analyser\Scope;
 use PHPStan\Reflection\ReflectionProvider;
 
-class TsObjectShapeTransformer implements _TsTypeTransformerContract
+class TsObjectShapeTransformer implements TsTypeTransformerContract
 {
 
     public static function canTransform(Type $type, Scope $scope, ReflectionProvider $reflectionProvider): bool {

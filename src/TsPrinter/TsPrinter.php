@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace djfhe\StanScript\TsPrinter;
 
-use djfhe\StanScript\_TsType;
+use djfhe\StanScript\TsType;
 use djfhe\StanScript\ControllerFunctionReturns;
 use PHPStan\Command\AnalysisResult;
 use PHPStan\Command\Output;
@@ -165,7 +165,7 @@ class TsPrinter implements \PHPStan\Command\ErrorFormatter\ErrorFormatter
      * 
      * @return [?string, string]
      */
-    protected function typesWithIdentifierToTypescriptDefinition(string $identifier, _TsType $type, \Closure $classMapper, \Closure $identifierMapper): array
+    protected function typesWithIdentifierToTypescriptDefinition(string $identifier, TsType $type, \Closure $classMapper, \Closure $identifierMapper): array
     {
         $identifier = $classMapper($identifier);
         $typeDefinition = $identifierMapper($type->toTypeDefinition(false));

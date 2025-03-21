@@ -2,15 +2,15 @@
 
 namespace djfhe\StanScript\LaravelData\Transformer;
 
-use djfhe\StanScript\_TsType;
-use djfhe\StanScript\_TsTypeTransformerContract;
+use djfhe\StanScript\TsType;
+use djfhe\StanScript\TsTypeTransformerContract;
 use djfhe\StanScript\PHPStan\Typescript\TypescriptTypes\Laravel\TsAbstractPaginatedType;
 use djfhe\StanScript\TsTransformer;
 use PHPStan\Analyser\Scope;
 use PHPStan\Reflection\ReflectionProvider;
 use PHPStan\Type\Type;
 
-class LaravelDataPaginatedParser implements _TsTypeTransformerContract
+class LaravelDataPaginatedParser implements TsTypeTransformerContract
 {
     public static function canTransform(Type $type, Scope $scope, ReflectionProvider $reflectionProvider): bool {
       if (!$type instanceof \PHPStan\Type\UnionType) {
@@ -77,7 +77,7 @@ class LaravelDataPaginatedParser implements _TsTypeTransformerContract
       return array_values($types)[0]->getIterableValueType();
     }
 
-    public static function transform(Type $type, Scope $scope, ReflectionProvider $reflectionProvider): _TsType {
+    public static function transform(Type $type, Scope $scope, ReflectionProvider $reflectionProvider): TsType {
       /** @var \PHPStan\Type\UnionType $type */
 
       $types = $type->getTypes();

@@ -2,15 +2,15 @@
 
 namespace djfhe\StanScript\Base\Transformer;
 
-use djfhe\StanScript\_TsTypeTransformerContract;
-use djfhe\StanScript\_TsType;
+use djfhe\StanScript\TsTypeTransformerContract;
+use djfhe\StanScript\TsType;
 use djfhe\StanScript\Base\Types\TsRecordType;
 use djfhe\StanScript\TsTransformer;
 use PHPStan\Type\Type;
 use PHPStan\Analyser\Scope;
 use PHPStan\Reflection\ReflectionProvider;
 
-class TsAssocArrayTransformer implements _TsTypeTransformerContract
+class TsAssocArrayTransformer implements TsTypeTransformerContract
 {
     public static function canTransform(Type $type, Scope $scope, ReflectionProvider $reflectionProvider): bool
     {
@@ -27,7 +27,7 @@ class TsAssocArrayTransformer implements _TsTypeTransformerContract
       return ! $keyType instanceof \PHPStan\Type\IntegerType;
     }
 
-    public static function transform(Type $type, Scope $scope, ReflectionProvider $reflectionProvider): _TsType {
+    public static function transform(Type $type, Scope $scope, ReflectionProvider $reflectionProvider): TsType {
       /** @var \PHPStan\Type\ArrayType $type */
 
       $keyType = $type->getKeyType();

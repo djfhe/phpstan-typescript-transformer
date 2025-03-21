@@ -2,13 +2,13 @@
 
 namespace djfhe\StanScript\Base\Types;
 
-use djfhe\StanScript\_TsType;
+use djfhe\StanScript\TsType;
 
-class TsRecordType extends _TsType
+class TsRecordType extends TsType
 {
     public function __construct(
-      protected _TsType $keyType,
-      protected _TsType $valueType,
+      protected TsType $keyType,
+      protected TsType $valueType,
     ) {}
 
     public function toTypeDefinition(bool $inline): string
@@ -26,7 +26,7 @@ class TsRecordType extends _TsType
 
     protected static function _deserialize(array $data): static
     {
-        return new self(_TsType::deserialize($data['keyType']), _TsType::deserialize($data['valueType']));
+        return new self(TsType::deserialize($data['keyType']), TsType::deserialize($data['valueType']));
     }
 
     protected function getChildren(): array

@@ -2,15 +2,15 @@
 
 namespace djfhe\StanScript\Base\Types;
 
-use djfhe\StanScript\_TsType;
+use djfhe\StanScript\TsType;
 
 /**
  * A simple homogeneous array type. For example: `string[]`, `number[]`, `(string | number)[]`, `never[]`, etc.
  */
-class TsSimpleArrayType extends _TsType
+class TsSimpleArrayType extends TsType
 {
     public function __construct(
-      protected _TsType $valueType
+      protected TsType $valueType
     ) {}
 
     public function toTypeDefinition(bool $inline): string
@@ -27,7 +27,7 @@ class TsSimpleArrayType extends _TsType
 
     protected static function _deserialize(array $data): static
     {
-        return new self(_TsType::deserialize($data['valueType']));
+        return new self(TsType::deserialize($data['valueType']));
     }
 
     protected function getChildren(): array

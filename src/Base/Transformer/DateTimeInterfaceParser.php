@@ -2,13 +2,13 @@
 
 namespace djfhe\StanScript\Base\Transformer;
 
-use djfhe\StanScript\_TsTypeTransformerContract;
+use djfhe\StanScript\TsTypeTransformerContract;
 use djfhe\StanScript\Base\Types\TsScalarType;
 use PHPStan\Analyser\Scope;
 use PHPStan\Reflection\ReflectionProvider;
 use PHPStan\Type\Type;
 
-class DateTimeInterfaceParser implements _TsTypeTransformerContract
+class DateTimeInterfaceParser implements TsTypeTransformerContract
 {
     public static function canTransform(Type $type, Scope $scope, ReflectionProvider $reflectionProvider): bool {
         if (!$type instanceof \PHPStan\Type\ObjectType) {

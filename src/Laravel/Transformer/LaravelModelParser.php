@@ -2,13 +2,13 @@
 
 namespace djfhe\StanScript\Laravel\Transformer;
 
-use djfhe\StanScript\_TsTypeTransformerContract;
+use djfhe\StanScript\TsTypeTransformerContract;
 use djfhe\StanScript\Base\Types\TsScalarType;
 use PHPStan\Analyser\Scope;
 use PHPStan\Reflection\ReflectionProvider;
 use PHPStan\Type\Type;
 
-class LaravelModelParser implements _TsTypeTransformerContract
+class LaravelModelParser implements TsTypeTransformerContract
 {
     public static function canTransform(Type $type, Scope $scope, ReflectionProvider $reflectionProvider): bool
     {

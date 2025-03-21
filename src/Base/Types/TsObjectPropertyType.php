@@ -2,13 +2,13 @@
 
 namespace djfhe\StanScript\Base\Types;
 
-use djfhe\StanScript\_TsType;
+use djfhe\StanScript\TsType;
 
-class TsObjectPropertyType extends _TsType
+class TsObjectPropertyType extends TsType
 {
     public function __construct(
         public string $key,
-        public _TsType $value,
+        public TsType $value,
         public bool $optional = false
     ) {}
 
@@ -28,7 +28,7 @@ class TsObjectPropertyType extends _TsType
 
     protected static function _deserialize(array $data): static
     {
-        return new self($data['key'], _TsType::deserialize($data['value']), $data['optional']);
+        return new self($data['key'], TsType::deserialize($data['value']), $data['optional']);
     }
 
     protected function getChildren(): array

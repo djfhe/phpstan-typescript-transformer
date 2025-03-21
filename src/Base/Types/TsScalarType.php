@@ -2,9 +2,9 @@
 
 namespace djfhe\StanScript\Base\Types;
 
-use djfhe\StanScript\_TsType;
+use djfhe\StanScript\TsType;
 
-class TsScalarType extends _TsType
+class TsScalarType extends TsType
 {
     
     public function __construct(

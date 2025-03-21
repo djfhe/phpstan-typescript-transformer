@@ -2,7 +2,7 @@
 
 namespace djfhe\StanScript\TsPrinter;
 
-use djfhe\StanScript\_TsType;
+use djfhe\StanScript\TsType;
 use PHPStan\Analyser\Error;
 use PHPStan\Rules\RuleError;
 use PHPStan\Rules\RuleErrorBuilder;
@@ -15,13 +15,13 @@ final class PrintTsType
     public function __construct(
       public string $namespace,
       public string $name,
-      public _TsType $type,
+      public TsType $type,
     ) { }
 
     public static function create(
       string $namespace,
       string $name,
-      _TsType $type,
+      TsType $type,
     ): self {
       return new self($namespace, $name, $type);
     }
@@ -45,12 +45,12 @@ final class PrintTsType
         return new self(
             $metadata['namespace'],
             $metadata['name'],
-            _TsType::deserialize($metadata['type'])
+            TsType::deserialize($metadata['type'])
         );
     }
 
     /**
-     * @return _TsType[]
+     * @return TsType[]
      */
     public function getRecursiveChildren(): array
     {

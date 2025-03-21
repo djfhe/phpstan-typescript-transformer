@@ -2,14 +2,14 @@
 
 namespace djfhe\StanScript\Base\Transformer;
 
-use djfhe\StanScript\_TsTypeTransformerContract;
+use djfhe\StanScript\TsTypeTransformerContract;
 use djfhe\StanScript\Base\Types\TsIntersectionType;
 use djfhe\StanScript\TsTransformer;
 use PHPStan\Type\Type;
 use PHPStan\Analyser\Scope;
 use PHPStan\Reflection\ReflectionProvider;
 
-class TsIntersectionTransformer implements _TsTypeTransformerContract
+class TsIntersectionTransformer implements TsTypeTransformerContract
 {
     public static function canTransform(Type $type, Scope $scope, ReflectionProvider $reflectionProvider): bool {
         return $type instanceof \PHPStan\Type\IntersectionType;

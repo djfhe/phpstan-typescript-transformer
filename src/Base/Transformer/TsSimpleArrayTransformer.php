@@ -2,7 +2,7 @@
 
 namespace djfhe\StanScript\Base\Transformer;
 
-use djfhe\StanScript\_TsTypeTransformerContract;
+use djfhe\StanScript\TsTypeTransformerContract;
 use djfhe\StanScript\Base\Types\TsSimpleArrayType;
 use djfhe\StanScript\TsTransformer;
 use PHPStan\Type\Type;
@@ -12,7 +12,7 @@ use PHPStan\Reflection\ReflectionProvider;
 /**
  * A simple homogeneous array type. For example: `string[]`, `number[]`, `(string | number)[]`, `never[]`, etc.
  */
-class TsSimpleArrayTransformer implements _TsTypeTransformerContract
+class TsSimpleArrayTransformer implements TsTypeTransformerContract
 {
     public static function canTransform(Type $type, Scope $scope, ReflectionProvider $reflectionProvider): bool {
         if (!$type instanceof \PHPStan\Type\ArrayType) {

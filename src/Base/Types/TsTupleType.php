@@ -2,20 +2,20 @@
 
 namespace djfhe\StanScript\Base\Types;
 
-use djfhe\StanScript\_TsType;
+use djfhe\StanScript\TsType;
 
-class TsTupleType extends _TsType
+class TsTupleType extends TsType
 {
     public function __construct(
         /** @var array<_TsType> */
         protected array $types = [],
     ) {}
 
-    public function add(_TsType $type) {
+    public function add(TsType $type) {
         $this->types[] = $type;
     }
 
-    public function get(int $index): _TsType
+    public function get(int $index): TsType
     {
         return $this->types[$index];
     }
@@ -37,13 +37,13 @@ class TsTupleType extends _TsType
     protected function _serialize(): array
     {
         return [
-            'types' => array_map(fn(_TsType $type) => $type->serialize(), $this->types)
+            'types' => array_map(fn(TsType $type) => $type->serialize(), $this->types)
         ];
     }
 
     protected static function _deserialize(array $data): static
     {
-        return new self(array_map(fn($type) => _TsType::deserialize($type), $data['types']));
+        return new self(array_map(fn($type) => TsType::deserialize($type), $data['types']));
     }
 
     protected function getChildren(): array
