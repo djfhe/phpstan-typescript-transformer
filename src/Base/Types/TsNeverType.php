@@ -11,16 +11,6 @@ class TsNeverType extends TsType
         return 'never';
     }
 
-    protected function _serialize(): array
-    {
-        return [];
-    }
-
-    protected static function _deserialize(array $data): static
-    {
-        return new self();
-    }
-
     protected function getChildren(): array
     {
         return [];

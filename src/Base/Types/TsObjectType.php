@@ -40,18 +40,6 @@ class TsObjectType extends TsType
         return "{ " . implode("; ", $properties) . " }";
     }
 
-    protected function _serialize(): array
-    {
-        return [
-            'properties' => array_map(fn(TsObjectPropertyType $property) => $property->serialize(), $this->properties)
-        ];
-    }
-
-    protected static function _deserialize(array $data): static
-    {
-        return new self(array_map(fn($property) => TsObjectPropertyType::deserialize($property), $data['properties']));
-    }
-
     protected function getChildren(): array
     {
         return $this->properties;

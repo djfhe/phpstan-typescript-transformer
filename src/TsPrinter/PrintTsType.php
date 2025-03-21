@@ -33,7 +33,7 @@ final class PrintTsType
           ->metadata([
             'namespace' => $this->namespace,
             'name' => $this->name,
-            'type' => $this->type->serialize(),
+            'type' => serialize($this->type),
           ])
           ->build();
     }
@@ -45,7 +45,7 @@ final class PrintTsType
         return new self(
             $metadata['namespace'],
             $metadata['name'],
-            TsType::deserialize($metadata['type'])
+            unserialize($metadata['type']),
         );
     }
 

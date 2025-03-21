@@ -16,18 +16,6 @@ class TsScalarType extends TsType
         return $this->value;
     }
 
-    protected function _serialize(): array
-    {
-        return [
-            'value' => $this->value
-        ];
-    }
-
-    protected static function _deserialize(array $data): static
-    {
-        return new self($data['value']);
-    }
-
     protected function getChildren(): array
     {
         return [];

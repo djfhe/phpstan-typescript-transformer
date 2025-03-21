@@ -30,19 +30,6 @@ class TsUnionType extends TsType
         return '(' . implode(' | ', array_map(fn(TsType $type) => $type->toTypeString($inline), $this->types)) . ')';
     }
 
-
-    protected function _serialize(): array
-    {
-        return [
-            'types' => array_map(fn(TsType $type) => $type->serialize(), $this->types)
-        ];
-    }
-
-    protected static function _deserialize(array $data): static
-    {
-        return new self(array_map(fn($type) => TsType::deserialize($type), $data['types']));
-    }
-
     protected function getChildren(): array
     {
         return $this->types;

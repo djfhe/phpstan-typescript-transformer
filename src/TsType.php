@@ -28,23 +28,6 @@ abstract class TsType {
     return $this->toTypeDefinition($inline);
   }
 
-  protected abstract static function _deserialize(array $data): static;
-  protected abstract function _serialize(): array;
-
-  final public function serialize(): array
-  {
-    return [
-      'identifier' => $this->identifier,
-      'class' => static::class,
-      'data' => $this->_serialize()
-    ];
-  }
-
-  final public static function deserialize(array $data): static
-  {
-    return $data['class']::_deserialize($data['data'])->setIdentifier($data['identifier']);
-  }
-
   /**
    * @return TsType[]
    */

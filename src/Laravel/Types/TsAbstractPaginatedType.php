@@ -19,18 +19,6 @@ class TsAbstractPaginatedType extends TsType
       return $paginated;
     }
 
-    protected function _serialize(): array
-    {
-        return [
-            'itemType' => $this->itemType->serialize(),
-        ];
-    }
-
-    protected static function _deserialize(array $data): static
-    {
-        return new self(TsType::deserialize($data['itemType']));
-    }
-
     protected function getChildren(): array
     {
         return [$this->itemType];

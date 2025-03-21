@@ -18,18 +18,6 @@ class TsSimpleArrayType extends TsType
         return "{$this->valueType->toTypeString($inline)}[]";
     }
 
-    protected function _serialize(): array
-    {
-        return [
-            'valueType' => $this->valueType->serialize()
-        ];
-    }
-
-    protected static function _deserialize(array $data): static
-    {
-        return new self(TsType::deserialize($data['valueType']));
-    }
-
     protected function getChildren(): array
     {
         return [$this->valueType];
