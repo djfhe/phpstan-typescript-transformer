@@ -1,13 +1,11 @@
 <?php
 
-namespace djfhe\ControllerTransformer;
-
-use djfhe\ControllerTransformer\PHPStan\Typescript\TypescriptTypes\_TsType;
+namespace djfhe\StanScript;
 
 final class ControllerFunctionReturns
 {
 
-  public static string $error_identifier = 'djfhe.controllerTransformer.controllerMethodReturnType';
+  public static string $error_identifier = 'djfhe.StanScript.controllerMethodReturnType';
 
     public function __construct(
       public string $class,

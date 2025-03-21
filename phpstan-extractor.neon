@@ -1,11 +1,16 @@
 parameters:
-    customRulesetUsed: true
-    errorFormat: extractor
+  bootstrapFiles:
+    - src/Base/autoload.php
+    - src/Laravel/autoload.php
+    - src/LaravelData/autoload.php
+  
+  customRulesetUsed: true
+  errorFormat: tsprinter
   
 services:
-  errorFormatter.extractor:
-    class: djfhe\ControllerTransformer\PHPStan\ErrorFormatter
+  errorFormatter.tsprinter:
+    class: djfhe\StanScript\TsPrinter\TsPrinter
   - 
-    class: djfhe\ControllerTransformer\PHPStan\ControllerMethodReturnTypeRule
+    class: djfhe\StanScript\Laravel\Rules\ControllerInertiaReturnRule
     tags:
       - phpstan.rules.rule

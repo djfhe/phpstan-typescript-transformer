@@ -1,5 +1,5 @@
 {
-  "name": "djfhe/controller-transformer",
+  "name": "djfhe/stanscript",
   "type": "library",
   "license": "MIT",
   "version": "0.0.1",
@@ -12,7 +12,7 @@
   },
   "autoload-dev": {
     "psr-4": {
-      "djfhe\\ControllerTransformer\\": "src"
+      "djfhe\\StanScript\\": "src"
     }
   },
   "authors": [
