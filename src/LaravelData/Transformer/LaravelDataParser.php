@@ -43,38 +43,35 @@ class LaravelDataParser implements TsTypeTransformerContract
     }
 
     /**
-     * @var string[]
+     * @var ?string[]
      */
-    protected static array $laravelDataInternalPropertiesCache = [];
+    protected static ?array $laravelDataInternalPropertiesCache = null;
 
     /**
      * @return string[]
      */
     protected static function getLaravelDataInternalProperties(ReflectionProvider $provider): array
     {
-      if (!empty(self::$laravelDataInternalPropertiesCache)) {
+      if (self::$laravelDataInternalPropertiesCache !== null) {
         return self::$laravelDataInternalPropertiesCache;
       }
 
       $reflection = $provider->getClass('Spatie\LaravelData\Data');
 
-      if ($reflection === null) {
-        return [];
-      }
-
       $propertyNames = array_map(fn(ReflectionProperty $property) => $property->getName(), $reflection->getNativeReflection()->getProperties());
-
       self::$laravelDataInternalPropertiesCache = $propertyNames;
-      return $propertyNames;
+
+      return self::$laravelDataInternalPropertiesCache;
     }
 
     /**
      * @param string[] $propertyNames
+     * @return string[]
      */
     protected static function filterLaravelDataInternalProperties(array $propertyNames, ReflectionProvider $reflectionProvider): array {
       $internalProperties = self::getLaravelDataInternalProperties($reflectionProvider);
 
-      return array_filter($propertyNames, fn(string $name) => !in_array($name, $internalProperties));
+      return array_filter($propertyNames, fn(string $name) => !in_array($name, $internalProperties, true));
     }
 
     public static function transform(Type $type, Scope $scope, ReflectionProvider $reflectionProvider): TsObjectType
@@ -82,6 +79,10 @@ class LaravelDataParser implements TsTypeTransformerContract
       /** @var \PHPStan\Type\ObjectType $type */
 
       $reflection = $type->getClassReflection();
+
+      if ($reflection === null) {
+        throw new \Exception('Reflection is null');
+      }
 
       $properties = [];
       
@@ -106,7 +107,7 @@ class LaravelDataParser implements TsTypeTransformerContract
      * @return array<TsObjectPropertyType>
      */
     protected static function mapPropertyNames(array $properties, \PHPStan\Type\ObjectType $type, Scope $scope, ReflectionProvider $reflectionProvider): array {
-      $attributes = $type->getClassReflection()->getAttributes();
+      $attributes = $type->getClassReflection()?->getAttributes() ?? [];
       $nameMapper = self::parseNameMappingAttribute($attributes, $scope, $reflectionProvider);
       
       if ($nameMapper === null) {
@@ -138,8 +139,11 @@ class LaravelDataParser implements TsTypeTransformerContract
       return new TsObjectPropertyType($name, $tsType);
     }
 
+    /**
+     * @param array<int, \PHPStan\Reflection\AttributeReflection> $attributes
+     */
     protected static function parseLiteralTypescriptAttribute(array $attributes, Scope $scope, ReflectionProvider $reflectionProvider): ?TsType {
-      if (empty($attributes)) {
+      if (count($attributes) === 0) {
         return null;
       }
 
@@ -148,7 +152,7 @@ class LaravelDataParser implements TsTypeTransformerContract
        */
       $literalTypescriptAttribute = array_filter($attributes, fn($attribute) => $attribute->getName() === 'Spatie\TypeScriptTransformer\Attributes\LiteralTypeScriptType');
 
-      if (empty($literalTypescriptAttribute)) {
+      if (count($literalTypescriptAttribute) === 0) {
         return null;
       }
 
@@ -161,6 +165,9 @@ class LaravelDataParser implements TsTypeTransformerContract
       return TsTransformer::transform($arg, $scope, $reflectionProvider);
     }
 
+    /**
+     * @var string[]
+     */
     protected static array $laravelDataAttributeNameMapper = [
       'Spatie\LaravelData\Attributes\MapName',
       'Spatie\LaravelData\Attributes\MapInputName',
@@ -173,16 +180,16 @@ class LaravelDataParser implements TsTypeTransformerContract
      */
     protected static function parseNameMappingAttribute(array $attributes, Scope $scope, ReflectionProvider $reflectionProvider): ?\Closure
     {
-      if (empty($attributes)) {
+      if (count($attributes) === 0) {
         return null;
       }
 
       /**
        * @var \PHPStan\Reflection\AttributeReflection[]
        */
-      $mapInputNameAttribute = array_filter($attributes, fn($attribute) => in_array($attribute->getName(), self::$laravelDataAttributeNameMapper));
+      $mapInputNameAttribute = array_filter($attributes, fn($attribute) => in_array($attribute->getName(), self::$laravelDataAttributeNameMapper, true));
 
-      if (empty($mapInputNameAttribute)) {
+      if (count($mapInputNameAttribute) === 0) {
         return null;
       }
 
@@ -208,16 +215,33 @@ class LaravelDataParser implements TsTypeTransformerContract
         }
 
         if ($argValue === 'Spatie\LaravelData\Mappers\SnakeCaseMapper') {
-          return fn(string $name) => strtolower(preg_replace('/(?<!^)[A-Z]/', '_$0', $name));
+          return function (string $name) {
+            $snake = preg_replace('/([a-z])([A-Z])/', '$1_$2', $name); // lower followed by upper
+
+            if ($snake === null) {
+              return $name;
+            }
+
+            $snake = preg_replace('/([A-Z])([A-Z][a-z])/', '$1_$2', $snake); // acronym followed by normal word
+            
+            if ($snake === null) {
+              return $name;
+            }
+
+            // Convert to lowercase
+            $snake = strtolower($snake);
+
+            return $snake;
+          };
         }
 
         if ($argValue === 'Spatie\LaravelData\Mappers\StudlyCaseMapper') {
           return fn(string $name) => str_replace(' ', '', ucwords(str_replace('_', ' ', $name)));
-        }
+      }
       }
 
       if ($arg instanceof \PHPStan\Type\ObjectType && $arg->getClassName() === 'Spatie\LaravelData\Mappers\ProvidedNameMapper') {
-        $mapTo = $arg->getClassReflection()->getNativeProperty('name');
+        $mapTo = $arg->getClassReflection()?->getNativeProperty('name');
 
         if ($mapTo === null) {
           return null;

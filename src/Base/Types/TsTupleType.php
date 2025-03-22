@@ -7,11 +7,11 @@ use djfhe\StanScript\TsType;
 class TsTupleType extends TsType
 {
     public function __construct(
-        /** @var array<_TsType> */
+        /** @var array<TsType> */
         protected array $types = [],
     ) {}
 
-    public function add(TsType $type) {
+    public function add(TsType $type): void {
         $this->types[] = $type;
     }
 
@@ -29,7 +29,7 @@ class TsTupleType extends TsType
     {
         $types = [];
         foreach ($this->types as $type) {
-            $types[] = $type->toTypeString();
+            $types[] = $type->printTypeString();
         }
         return "[" . implode(", ", $types) . "]";
     }

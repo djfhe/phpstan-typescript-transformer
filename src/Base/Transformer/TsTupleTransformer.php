@@ -29,6 +29,8 @@ class TsTupleTransformer implements TsTypeTransformerContract
         }
       }
 
+      /** @var \PHPStan\Type\Constant\ConstantIntegerType[] $keyTypes */
+      
       usort($keyTypes, fn($a, $b) => $a->getValue() - $b->getValue());
 
       for ($i = 0; $i < count($keyTypes); $i++) {
@@ -41,10 +43,12 @@ class TsTupleTransformer implements TsTypeTransformerContract
     }
 
     public static function transform(Type $type, Scope $scope, ReflectionProvider $reflectionProvider): TsTupleType {
+      /** @var \PHPStan\Type\Constant\ConstantArrayType $type */
+      
       $types = [];
 
-      /** @var \PHPStan\Type\Constant\ConstantArrayType $type */
 
+      /** @var \PHPStan\Type\Constant\ConstantIntegerType[] */
       $keyTypes = $type->getKeyTypes();
       $values = $type->getValueTypes();
 

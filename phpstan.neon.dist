@@ -8,3 +8,19 @@ parameters:
       - src
 
     level: 10
+
+    # phpstanApi.instanceofType
+    # We mainly ignore these errors, since we need to check for the explicit type class we got.
+    # We can't use function such as ->isEnum()->yes() since this could still be a Union of enums
+    # and needed to be transformed by the union capable transformer first.
+    #
+    # phpstanApi.varTagAssumption
+    # Due to the structure of our transformer, we can rely on verification in the canTransformer() to make
+    # certain assumptions in the transform() function about the type of the PHPStan Type.
+    ignoreErrors:
+      - 
+        identifier: phpstanApi.instanceofType
+      -
+        identifier: phpstanApi.varTagAssumption
+
+    

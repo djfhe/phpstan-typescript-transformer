@@ -13,11 +13,16 @@ use PHPStan\Type\Type;
 class EnumParser implements TsTypeTransformerContract
 {
     public static function canTransform(Type $type, Scope $scope, ReflectionProvider $reflectionProvider): bool {
-      if (!$type->isEnum()->yes()) {
+
+      if (!$type instanceof \PHPStan\Type\ObjectType) {
         return false;
       }
 
-      return $type instanceof \PHPStan\Type\ObjectType;
+      if ($type->isEnum()->no()) {
+        return false;
+      }
+
+      return true;
     }
 
     public static function transform(Type $type, Scope $scope, ReflectionProvider $reflectionProvider): TsUnionType {

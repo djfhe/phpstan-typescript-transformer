@@ -5,8 +5,9 @@ namespace djfhe\StanScript\TsPrinter;
 class TsRawTypePrinter implements TsTypePrinterContract
 {
     public function __construct(
+        /** @var 'interface'|'type' */
         private string $keyword,
-        private string $namespace,
+        private ?string $namespace,
         private string $name,
         /** @var string[] */
         private array $genericKeys,

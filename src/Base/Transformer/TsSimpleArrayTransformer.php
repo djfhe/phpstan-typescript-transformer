@@ -19,10 +19,6 @@ class TsSimpleArrayTransformer implements TsTypeTransformerContract
             return false;
         }
 
-        if ($type instanceof \PHPStan\Type\Constant\ConstantArrayType) {
-            return false;
-        }
-
         $keyType = $type->getKeyType();
 
         return $keyType instanceof \PHPStan\Type\IntegerType;

@@ -38,31 +38,27 @@ class TsObjectShapeTransformer implements TsTypeTransformerContract
             $properties = [];
     
             foreach ($type->getProperties() as $name => $property) {
-              $isOptional = in_array($name, $typeOptionalProperties);
+              $isOptional = in_array($name, $typeOptionalProperties, true);
               $parsed = TsTransformer::transform($property, $scope, $reflectionProvider);
               $properties[] = new TsObjectPropertyType($name, $parsed, $isOptional);
             }
     
             return new TsObjectType($properties);
         }
+        
+        $properties = [];
 
-        if ($type instanceof \PHPStan\Type\Constant\ConstantArrayType) {
-            $properties = [];
+        $keyTypes = $type->getKeyTypes();
+        $valueTypes = $type->getValueTypes();
 
-            $keyTypes = $type->getKeyTypes();
-            $valueTypes = $type->getValueTypes();
+        foreach ($keyTypes as $i => $key) {
+            $isOptional = $type->isOptionalKey($i);
+            $parsedValue = TsTransformer::transform($valueTypes[$i], $scope, $reflectionProvider);
 
-            foreach ($keyTypes as $i => $key) {
-                $isOptional = $type->isOptionalKey($i);
-                $parsedValue = TsTransformer::transform($valueTypes[$i], $scope, $reflectionProvider);
-
-                $properties[] = new TsObjectPropertyType((string) $key->getValue(), $parsedValue, $isOptional);
-            }
-
-            return new TsObjectType($properties);
+            $properties[] = new TsObjectPropertyType((string) $key->getValue(), $parsedValue, $isOptional);
         }
 
-        throw new \Exception("Invalid type");
+        return new TsObjectType($properties);
     }
 
     public static function transformPriority(Type $type, Scope $scope, ReflectionProvider $reflectionProvider, array $candidates): int {

@@ -6,7 +6,6 @@ namespace djfhe\StanScript\Laravel\Rules;
 
 use djfhe\StanScript\Base\Types\TsObjectType;
 use djfhe\StanScript\Base\Types\TsUnionType;
-use djfhe\StanScript\ControllerFunctionReturns;
 use djfhe\StanScript\TsPrinter\TsTypePrinter;
 use djfhe\StanScript\TsTransformer;
 use PhpParser\Node;
@@ -16,7 +15,7 @@ use PHPStan\Reflection\ReflectionProvider;
 use PHPStan\Rules\RuleErrorBuilder;
 
 /**
- * @implements \PHPStan\Rules\Rule<\PhpStan\Node\ReturnStatementsNode>
+ * @implements \PHPStan\Rules\Rule<\PHPStan\Node\MethodReturnStatementsNode>
  */
 class ControllerInertiaReturnRule implements \PHPStan\Rules\Rule
 {
@@ -31,10 +30,6 @@ class ControllerInertiaReturnRule implements \PHPStan\Rules\Rule
 
     public function processNode(Node $node, Scope $scope): array
     {
-        if (! $node instanceof \PHPStan\Node\MethodReturnStatementsNode) {
-            return [];
-        }
-
         $namespace = $scope->getNamespace();
 
         if (! is_string($namespace) || ! str_starts_with($namespace, 'App\\Http\\Controllers')) {
@@ -80,10 +75,15 @@ class ControllerInertiaReturnRule implements \PHPStan\Rules\Rule
             $type = TsTransformer::transformExpression($returnValue, $returnScope, $this->reflectionProvider);
             
             $returnUnionType->add($type);
+        }
 
+        $reflection = $scope->getClassReflection();
+
+        if ($reflection === null) {
+            return [];
         }
         
-        $className = $scope->getClassReflection()->getName();
+        $className = $reflection->getName();
         $methodName = $node->getMethodName();
 
         if ($returnUnionType->count() === 0) {
@@ -99,7 +99,7 @@ class ControllerInertiaReturnRule implements \PHPStan\Rules\Rule
         }
 
         return [
-            TsTypePrinter::create($className, $methodName, $returnUnionType),
+            TsTypePrinter::create($className, $methodName, $returnUnionType)->toPHPStanError(),
         ];
     }
 

@@ -11,7 +11,7 @@ class TsObjectType extends TsType
       protected array $properties = [],
     ) {}
 
-    public function add(TsObjectPropertyType $property) {
+    public function add(TsObjectPropertyType $property): void {
         $this->properties[] = $property;
     }
 

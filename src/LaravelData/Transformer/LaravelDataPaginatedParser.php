@@ -17,28 +17,28 @@ class LaravelDataPaginatedParser implements TsTypeTransformerContract
         return false;
       }
 
-      $types = $type->getTypes();
+      $unionTypes = $type->getTypes();
 
-      if (count($types) !== 2) {
+      if (count($unionTypes) !== 2) {
         return false;
       }
 
-      foreach ($types as $type) {
-        if (!$type->isObject()->yes()) {
+      foreach ($unionTypes as $unionType) {
+        if (!$unionType instanceof \PHPStan\Type\ObjectType) {
           return false;
         }
       }
 
-      /** @var \PHPStan\Type\ObjectType[] $types */
+      /** @var \PHPStan\Type\ObjectType[] $unionTypes */
 
-      $paginator = self::getPaginator($types, $reflectionProvider);
-      $paginatedType = self::getPaginatedType($types);
+      $paginator = self::getPaginator($unionTypes, $reflectionProvider);
+      $paginatedType = self::getPaginatedType($unionTypes);
 
       return $paginator !== null && $paginatedType !== null;
     }
 
     /**
-     * @param \PHPStan\Type\ObjectType[] $type
+     * @param \PHPStan\Type\ObjectType[] $types
      */
     protected static function getPaginator(array $types, ReflectionProvider $reflectionProvider): ?Type {
       $paginator = array_filter($types, function ($type) use ($reflectionProvider) {
@@ -63,7 +63,7 @@ class LaravelDataPaginatedParser implements TsTypeTransformerContract
     }
 
     /**
-     * @param \PHPStan\Type\ObjectType[] $type
+     * @param \PHPStan\Type\ObjectType[] $types
      */
     protected static function getPaginatedType(array $types): ?Type {
       $types = array_filter($types, function ($type) {
@@ -80,9 +80,11 @@ class LaravelDataPaginatedParser implements TsTypeTransformerContract
     public static function transform(Type $type, Scope $scope, ReflectionProvider $reflectionProvider): TsType {
       /** @var \PHPStan\Type\UnionType $type */
 
-      $types = $type->getTypes();
+      $unionTypes = $type->getTypes();
 
-      $paginatedType = self::getPaginatedType($types);
+      /** @var \PHPStan\Type\ObjectType[] $unionTypes */
+
+      $paginatedType = self::getPaginatedType($unionTypes);
 
       assert($paginatedType !== null);
 

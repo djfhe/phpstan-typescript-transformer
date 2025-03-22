@@ -13,7 +13,7 @@ interface TsTypeTransformerContract {
   public static function transform(Type $type, Scope $scope, ReflectionProvider $reflectionProvider): TsType;
 
   /**
-   * @param TsTypeTransformerContract[] $candidates
+   * @param class-string<TsTypeTransformerContract>[] $candidates
    */
   public static function transformPriority(Type $type, Scope $scope, ReflectionProvider $reflectionProvider, array $candidates): int;
 }

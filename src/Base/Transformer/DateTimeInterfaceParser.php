@@ -11,6 +11,7 @@ use PHPStan\Type\Type;
 class DateTimeInterfaceParser implements TsTypeTransformerContract
 {
     public static function canTransform(Type $type, Scope $scope, ReflectionProvider $reflectionProvider): bool {
+        
         if (!$type instanceof \PHPStan\Type\ObjectType) {
             return false;
         }

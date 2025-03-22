@@ -12,6 +12,7 @@ use PHPStan\Reflection\ReflectionProvider;
 class ArrayableParser implements TsTypeTransformerContract
 {
     public static function canTransform(Type $type, Scope $scope, ReflectionProvider $reflectionProvider): bool {
+        
         if (!$type instanceof \PHPStan\Type\Generic\GenericObjectType) {
             return false;
         }
@@ -21,6 +22,10 @@ class ArrayableParser implements TsTypeTransformerContract
         }
 
         $reflection = $type->getClassReflection();
+
+        if ($reflection === null) {
+            return false;
+        }
 
         if ($reflection->implementsInterface('Illuminate\Contracts\Support\Arrayable')) {
             return true;
@@ -33,6 +38,7 @@ class ArrayableParser implements TsTypeTransformerContract
     {
       /** @var \PHPStan\Type\Generic\GenericObjectType $type */
 
+      // @phpstan-ignore phpstanApi.varTagAssumption
       $types = $type->getTypes();
 
       assert(count($types) === 2);

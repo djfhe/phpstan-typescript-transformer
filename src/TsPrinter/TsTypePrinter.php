@@ -4,12 +4,16 @@ namespace djfhe\StanScript\TsPrinter;
 
 use djfhe\StanScript\TsType;
 use PHPStan\Analyser\Error;
+use PHPStan\Rules\IdentifierRuleError;
 use PHPStan\Rules\RuleError;
 use PHPStan\Rules\RuleErrorBuilder;
 use SplObjectStorage;
 
 final class TsTypePrinter implements TsTypePrinterContract
 {
+  /**
+   * @var SplObjectStorage<TsType,int>
+   */
   public static SplObjectStorage $printingTypesStack;
 
   protected static function resetPrintingTypesStack(): void
@@ -36,7 +40,7 @@ final class TsTypePrinter implements TsTypePrinterContract
       return new self($namespace . '\\' . $name, $type);
     }
 
-    public function toPHPStanError(): RuleError
+    public function toPHPStanError(): IdentifierRuleError
     {
         return RuleErrorBuilder::message('')
           ->identifier(self::$error_identifier)
@@ -51,9 +55,22 @@ final class TsTypePrinter implements TsTypePrinterContract
     {
         $metadata = $error->getMetadata();
 
+        $name = $metadata['name'];
+        $serializedTypeData = $metadata['type'];
+
+        if (!is_string($name) || !is_string($serializedTypeData)) {
+            throw new \InvalidArgumentException('name or type metadata is not a string');
+        }
+
+        $unserializedTypeData = unserialize($serializedTypeData);
+
+        if (!$unserializedTypeData instanceof TsType) {
+            throw new \InvalidArgumentException('type metadata is not an instance of TsType');
+        }
+
         return new self(
-            $metadata['name'],
-            unserialize($metadata['type']),
+            $name,
+            $unserializedTypeData
         );
     }
 

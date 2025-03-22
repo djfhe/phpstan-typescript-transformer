@@ -20,6 +20,10 @@ class NamedTypesRegistry
       return self::$typeNameToIdentifier[$name] ?? null;
     }
 
+    /**
+     * @param 'interface'|'type' $keyword
+     * @param string[] $genericKeys
+     */
     public static function registerNamedType(string $keyword, string $name, string $printedType, array $genericKeys = []): string
     {
       if (array_key_exists($name, self::$typeNameToIdentifier)) {

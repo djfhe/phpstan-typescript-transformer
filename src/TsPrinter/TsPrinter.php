@@ -28,7 +28,7 @@ class TsPrinter implements \PHPStan\Command\ErrorFormatter\ErrorFormatter
 
             $message = $error->getMessage();
 
-            if ($message !== null && $message !== '') {
+            if ($message !== '') {
                 $output->writeRaw('// ' . $message . PHP_EOL);
             }
 

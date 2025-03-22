@@ -13,29 +13,25 @@ use SplObjectStorage;
 class TsTransformer
 {
   /**
-   * @var array<class-string<TsTypeTransformerContract>,TsTypeTransformerContract>
+   * @var ?array<class-string<TsTypeTransformerContract>>
    */
-  protected static array $registry = [];
-  protected static ?SplObjectStorage $cache = null;
+  protected static ?array $registry = null;
 
   /**
-   * @param class-string<TsTypeTransformerContract> $class
+   * @var ?SplObjectStorage<Type,TsType>
    */
-    public static function register(string $transformer): void
+  protected static ?SplObjectStorage $cache = null;
+
+    /**
+     * @return array<class-string<TsTypeTransformerContract>>
+     */
+    protected static function init(): array
     {
-      if (in_array($transformer, self::$registry)) {
-        return;
+      if (self::$registry !== null) {
+        return self::$registry;
       }
 
-      self::$registry[] = $transformer;
-    }
-
-
-    protected static function init(): void
-    {
-      if (!empty(self::$registry)) {
-        return;
-      }
+      self::$registry = [];
 
       // get classes implementing TsTypeParserContract
       $classes = get_declared_classes();
@@ -43,14 +39,25 @@ class TsTransformer
       
       foreach ($classes as $class) {
 
-        if (!in_array(TsTypeTransformerContract::class, class_implements($class, TsTypeTransformerContract::class), true)) {
+        if (!in_array(TsTypeTransformerContract::class, class_implements($class), true)) {
           continue;
         }
 
-        self::register($class);
+        /** @var class-string<TsTypeTransformerContract> $class */
+
+        if (in_array($class, self::$registry, true)) {
+          continue;
+        }
+  
+        self::$registry[] = $class;
       }
+
+      return self::$registry;
     }
 
+    /**
+     * @return SplObjectStorage<Type,TsType>
+     */
     protected static function getCache(): SplObjectStorage
     {
       if (self::$cache === null) {
@@ -69,7 +76,7 @@ class TsTransformer
 
     public static function transform(Type $type, Scope $scope, ReflectionProvider $reflectionProvider): TsType
     {
-      self::init();
+      $transformers = self::init();
 
       $cache = self::getCache();
 
@@ -78,13 +85,13 @@ class TsTransformer
       }
 
       $candidates = [];
-      foreach (self::$registry as $transformer) {
+      foreach ($transformers as $transformer) {
         if ($transformer::canTransform($type, $scope, $reflectionProvider)) {
           $candidates[] = $transformer;
         }
       }
 
-      if (empty($candidates)) {
+      if (count($candidates) === 0) {
         $class = $type::class;
         $value = $type->describe(VerbosityLevel::value());
 

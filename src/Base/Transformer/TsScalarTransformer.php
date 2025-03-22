@@ -39,6 +39,7 @@ class TsScalarTransformer implements TsTypeTransformerContract
             $type instanceof \PHPStan\Type\FloatType => new TsScalarType('number'),
             $type instanceof \PHPStan\Type\BooleanType => new TsScalarType('boolean'),
             $type instanceof \PHPStan\Type\NullType => new TsScalarType('null'),
+            default => throw new \InvalidArgumentException('Invalid type'),
         };
     }
 

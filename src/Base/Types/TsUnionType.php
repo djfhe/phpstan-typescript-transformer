@@ -11,7 +11,7 @@ class TsUnionType extends TsType
         protected array $types = [],
     ) {}
 
-    public function add(TsType $type) {
+    public function add(TsType $type): void {
         $this->types[] = $type;
     }
 
