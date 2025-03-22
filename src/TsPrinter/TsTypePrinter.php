@@ -77,7 +77,14 @@ final class TsTypePrinter implements TsTypePrinterContract
 
         $code = $this->type->printTypeString();
 
-        $typeDefinition = TsPrinterUtil::createDeclaration($keyword, $typeName, $code);
+        $genericKeys = array_keys($this->type->_genericParameters());
+
+        $typeDefinition = TsPrinterUtil::createDeclaration(
+            keyword: $keyword,
+            name: $typeName,
+            genericKeys: $genericKeys,
+            definition: $code
+        );
         
         return $typeDefinition;
     }

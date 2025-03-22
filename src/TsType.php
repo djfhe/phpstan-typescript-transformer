@@ -8,7 +8,11 @@ use djfhe\StanScript\TsPrinter\TsTypePrinter;
 abstract class TsType {
 
   private ?string $name = null;
-  private ?string $typeDefinitionCache = null;
+
+  /**
+   * @return array<string,string>
+   */
+  private ?array $genericParametersCache = null;
 
   public function getName(): ?string
   {
@@ -23,20 +27,48 @@ abstract class TsType {
 
   protected abstract function typeDefinition(): string;
 
-  private function _printTypeString(): string
+  /**
+   * @return array<string,string>
+   */
+  protected function genericParameters(): array
   {
-    if ($this->typeDefinitionCache === null) {
-      $this->typeDefinitionCache = $this->typeDefinition();
+    return [];
+  }
+
+  /**
+   * @return array<string,string>
+   */
+  final public function _genericParameters(): array
+  {
+    if ($this->genericParametersCache !== null) {
+      return $this->genericParametersCache;
     }
 
-    return $this->typeDefinitionCache;
+    $this->genericParametersCache = $this->genericParameters();
+
+    return $this->genericParametersCache;
   }
 
   final public function printTypeString(): string
   {
-    if ($this->name !== null) {
-      $identifier = NamedTypesRegistry::registerNamedType($this->definitionKeyword(), $this->name, $this->_printTypeString());
-      return $identifier;
+    if ($this->getName() !== null) {
+      $genericParameters = $this->_genericParameters();
+
+      $identifier = NamedTypesRegistry::getNamedTypeIdentifier($this->getName());
+
+      if ($identifier === null) {
+        $genericKeys = array_keys($genericParameters);
+
+        $identifier = NamedTypesRegistry::registerNamedType(
+          keyword: $this->definitionKeyword(),
+          name: $this->getName(),
+          printedType: $this->typeDefinition(),
+          genericKeys: $genericKeys
+        );
+      }
+
+      $genericValuesString = count($genericParameters) > 0 ? '<' . implode(',', array_values($genericParameters)) . '>' : '';
+      return $identifier . $genericValuesString;
     }
 
     if (TsTypePrinter::$printingTypesStack->contains($this)) {
@@ -45,7 +77,7 @@ abstract class TsType {
 
     TsTypePrinter::$printingTypesStack->attach($this);
 
-    return $this->_printTypeString();
+    return $this->typeDefinition();
   }
 
   /**

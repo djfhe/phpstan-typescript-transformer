@@ -39,6 +39,13 @@ class TsNamespacePrinter
 
     public function compareTo(TsNamespacePrinter $other): int
     {
+        $thisLevel = substr_count($this->name, '.');
+        $otherLevel = substr_count($other->name, '.');
+
+        if ($thisLevel !== $otherLevel) {
+            return $thisLevel - $otherLevel;
+        }
+
         return strcmp($this->name, $other->name);
     }
 }

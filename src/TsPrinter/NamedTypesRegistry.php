@@ -15,7 +15,12 @@ class NamedTypesRegistry
      */
     protected static array $identifierToTsName = [];
 
-    public static function registerNamedType(string $keyword, string $name, string $printedType): string
+    public static function getNamedTypeIdentifier(string $name): ?string
+    {
+      return self::$typeNameToIdentifier[$name] ?? null;
+    }
+
+    public static function registerNamedType(string $keyword, string $name, string $printedType, array $genericKeys = []): string
     {
       if (array_key_exists($name, self::$typeNameToIdentifier)) {
         return self::$typeNameToIdentifier[$name];
@@ -28,12 +33,12 @@ class NamedTypesRegistry
       $namespace = TsPrinterUtil::getNamespace($name);
       $name = TsPrinterUtil::getName($name);
 
-      TsPrinter::$namespaceCollectionPrinter->addTsTypePrinter(new TsRawTypePrinter($keyword, $namespace, $name, $printedType));
+      TsPrinter::$namespaceCollectionPrinter->addTsTypePrinter(new TsRawTypePrinter(keyword: $keyword, namespace: $namespace, name: $name, genericKeys: $genericKeys, typeDefinition: $printedType));
 
       $tsName = $namespace === null ? $name : $namespace . '.' . $name;
 
       self::$identifierToTsName[$identifier] = $tsName;
-
+      
       return $identifier;
     }
 

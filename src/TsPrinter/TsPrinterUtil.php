@@ -24,13 +24,16 @@ class TsPrinterUtil
 
   /**
    * @param 'type' | 'interface' $keyword
+   * @param string[] $genericKeys
    */
-  public static function createDeclaration(string $keyword, string $name, string $definition): string
+  public static function createDeclaration(string $keyword, string $name, array $genericKeys, string $definition): string
   {
+    $genericKeysString = count($genericKeys) > 0 ? '<' . implode(',', $genericKeys) . '>' : '';
+
       if ($keyword === 'interface') {
-          return 'export interface ' . $name . ' ' . $definition;
+          return 'export interface ' . $name . $genericKeysString . ' ' . $definition;
       }
 
-      return 'export type ' . $name . ' = ' . $definition . ';';
+      return 'export type ' . $name. $genericKeysString  . ' = ' . $definition . ';';
   }
 }

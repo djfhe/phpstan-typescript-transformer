@@ -8,6 +8,8 @@ class TsRawTypePrinter implements TsTypePrinterContract
         private string $keyword,
         private string $namespace,
         private string $name,
+        /** @var string[] */
+        private array $genericKeys,
         private string $typeDefinition,
     ) {}
 
@@ -23,6 +25,11 @@ class TsRawTypePrinter implements TsTypePrinterContract
 
     public function printTypeString(): string
     {
-        return TsPrinterUtil::createDeclaration($this->keyword, $this->name, $this->typeDefinition);
+        return TsPrinterUtil::createDeclaration(
+            keyword: $this->keyword,
+            name: $this->name,
+            genericKeys: $this->genericKeys,
+            definition: $this->typeDefinition
+        );
     }
 }
