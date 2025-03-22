@@ -13,16 +13,22 @@ Expect everything to break.
 1. Clone the repository.
 2. `composer install`
 
-In your test project, you can install a local version of PHPStan TypeScript Transformer by adding:
+In your test project, you can install a local version of PHPStan TypeScript Transformer by adding it as a local repository:
+
+```sh
+composer config repositories.local path ../path/to/phpstan-typescript-transformer
+```
+
+or add it to the `composer.json` manually:
 
 ```json
 {
-    "repositories": [
-        {
-            "type": "path",
-            "url": "/path/to/phpstan-typescript-transformer"
-        }
-    ],
+  "repositories": [
+    {
+      "type": "path",
+      "url": "/path/to/phpstan-typescript-transformer"
+    }
+  ]
 }
 ```
 
