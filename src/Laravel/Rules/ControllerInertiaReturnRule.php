@@ -7,7 +7,7 @@ namespace djfhe\StanScript\Laravel\Rules;
 use djfhe\StanScript\Base\Types\TsObjectType;
 use djfhe\StanScript\Base\Types\TsUnionType;
 use djfhe\StanScript\ControllerFunctionReturns;
-use djfhe\StanScript\TsPrinter\PrintTsType;
+use djfhe\StanScript\TsPrinter\TsTypePrinter;
 use djfhe\StanScript\TsTransformer;
 use PhpParser\Node;
 use PHPStan\Analyser\Scope;
@@ -88,18 +88,18 @@ class ControllerInertiaReturnRule implements \PHPStan\Rules\Rule
 
         if ($returnUnionType->count() === 0) {
             return [
-                PrintTsType::create($className, $methodName, new TsObjectType())->toPHPStanError(),
+                TsTypePrinter::create($className, $methodName, new TsObjectType())->toPHPStanError(),
             ];
         }
 
         if ($returnUnionType->count() === 1) {
             return [
-                PrintTsType::create($className, $methodName, $returnUnionType->get(0))->toPHPStanError(),
+                TsTypePrinter::create($className, $methodName, $returnUnionType->get(0))->toPHPStanError(),
             ];
         }
 
         return [
-            PrintTsType::create($className, $methodName, $returnUnionType),
+            TsTypePrinter::create($className, $methodName, $returnUnionType),
         ];
     }
 

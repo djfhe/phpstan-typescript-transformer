@@ -96,7 +96,7 @@ class LaravelDataParser implements TsTypeTransformerContract
       $properties = self::mapPropertyNames($properties, $type, $scope, $reflectionProvider);
 
       $parsed = new TsObjectType($properties);
-      $parsed->setIdentifier($type->getClassName());
+      $parsed->setName($type->getClassName());
 
       return $parsed;
     }

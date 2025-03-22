@@ -8,7 +8,7 @@ class TsAbstractPaginatedType extends TsType
 {
     public function __construct(private TsType $itemType) {}
 
-    public function typeDefinition(): string
+    protected function typeDefinition(): string
     {
       $itemTsType = $this->itemType->printTypeString();
       
@@ -17,10 +17,5 @@ class TsAbstractPaginatedType extends TsType
     
       
       return $paginated;
-    }
-
-    protected function getChildren(): array
-    {
-        return [$this->itemType];
     }
 }

@@ -13,13 +13,8 @@ class TsSimpleArrayType extends TsType
       protected TsType $valueType
     ) {}
 
-    public function typeDefinition(): string
+    protected function typeDefinition(): string
     {
         return "{$this->valueType->printTypeString()}[]";
-    }
-
-    protected function getChildren(): array
-    {
-        return [$this->valueType];
     }
 }

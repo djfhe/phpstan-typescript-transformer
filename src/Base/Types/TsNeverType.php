@@ -6,13 +6,8 @@ use djfhe\StanScript\TsType;
 
 class TsNeverType extends TsType
 {
-    public function typeDefinition(): string
+    protected function typeDefinition(): string
     {
         return 'never';
-    }
-
-    protected function getChildren(): array
-    {
-        return [];
     }
 }

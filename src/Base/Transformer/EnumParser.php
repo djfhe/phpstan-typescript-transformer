@@ -34,7 +34,7 @@ class EnumParser implements TsTypeTransformerContract
         $tsCases[] = $tsType;
       }
 
-      return (new TsUnionType($tsCases))->setIdentifier($type->getClassName());
+      return (new TsUnionType($tsCases))->setName($type->getClassName());
     }
 
     public static function transformPriority(Type $type, Scope $scope, ReflectionProvider $reflectionProvider, array $candidates): int {

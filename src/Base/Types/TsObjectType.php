@@ -30,7 +30,7 @@ class TsObjectType extends TsType
         return "interface";
     }
 
-    public function typeDefinition(): string
+    protected function typeDefinition(): string
     {
         $properties = [];
         foreach ($this->properties as $value) {
@@ -38,10 +38,5 @@ class TsObjectType extends TsType
         }
 
         return "{ " . implode("; ", $properties) . " }";
-    }
-
-    protected function getChildren(): array
-    {
-        return $this->properties;
     }
 }

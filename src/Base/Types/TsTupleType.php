@@ -25,17 +25,12 @@ class TsTupleType extends TsType
         return count($this->types);
     }
 
-    public function typeDefinition(): string
+    protected function typeDefinition(): string
     {
         $types = [];
         foreach ($this->types as $type) {
             $types[] = $type->toTypeString();
         }
         return "[" . implode(", ", $types) . "]";
-    }
-
-    protected function getChildren(): array
-    {
-        return $this->types;
     }
 }

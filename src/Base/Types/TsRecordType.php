@@ -11,13 +11,8 @@ class TsRecordType extends TsType
       protected TsType $valueType,
     ) {}
 
-    public function typeDefinition(): string
+    protected function typeDefinition(): string
     {
         return "Record<{$this->keyType->printTypeString()}, {$this->valueType->printTypeString()}>";
-    }
-
-    protected function getChildren(): array
-    {
-        return [$this->keyType, $this->valueType];
     }
 }

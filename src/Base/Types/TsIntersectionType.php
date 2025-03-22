@@ -25,13 +25,8 @@ class TsIntersectionType extends TsType
         return count($this->types);
     }
 
-    public function typeDefinition(): string
+    protected function typeDefinition(): string
     {
         return '(' . implode(' & ', array_map(fn(TsType $type) => $type->printTypeString(), $this->types)) . ')';
-    }
-
-    protected function getChildren(): array
-    {
-        return $this->types;
     }
 }

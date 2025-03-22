@@ -11,13 +11,8 @@ class TsScalarType extends TsType
         protected string $value
     ) {}
 
-    public function typeDefinition(): string
+    protected function typeDefinition(): string
     {
         return $this->value;
-    }
-
-    protected function getChildren(): array
-    {
-        return [];
     }
 }

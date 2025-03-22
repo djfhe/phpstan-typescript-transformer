@@ -12,13 +12,8 @@ class TsObjectPropertyType extends TsType
         public bool $optional = false
     ) {}
 
-    public function typeDefinition(): string
+    protected function typeDefinition(): string
     {
         return $this->key . ($this->optional ? '?' : '') . ': ' . $this->value->printTypeString();
-    }
-
-    protected function getChildren(): array
-    {
-        return [$this->value];
     }
 }

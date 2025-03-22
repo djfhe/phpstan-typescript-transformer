@@ -2,55 +2,50 @@
 
 namespace djfhe\StanScript;
 
-use djfhe\StanScript\TsPrinter\TsPrinter;
+use djfhe\StanScript\TsPrinter\NamedTypesRegistry;
+use djfhe\StanScript\TsPrinter\TsTypePrinter;
 
 abstract class TsType {
 
-  private ?string $identifier = null;
+  private ?string $name = null;
+  private ?string $typeDefinitionCache = null;
 
-  public function getIdentifier(): ?string
+  public function getName(): ?string
   {
-    return $this->identifier;
+    return $this->name;
   }
 
-  public function setIdentifier(?string $identifier): static
+  public function setName(?string $name): static
   {
-    $this->identifier = $identifier;
+    $this->name = $name;
     return $this;
   }
 
-  public abstract function typeDefinition(): string;
+  protected abstract function typeDefinition(): string;
+
+  private function _printTypeString(): string
+  {
+    if ($this->typeDefinitionCache === null) {
+      $this->typeDefinitionCache = $this->typeDefinition();
+    }
+
+    return $this->typeDefinitionCache;
+  }
 
   final public function printTypeString(): string
   {
-    if ($this->identifier !== null) {
-      return '{%' . $this->identifier . '%}';
+    if ($this->name !== null) {
+      $identifier = NamedTypesRegistry::registerNamedType($this->definitionKeyword(), $this->name, $this->_printTypeString());
+      return $identifier;
     }
 
-    if (TsPrinter::$printingTypesStack->contains($this)) {
+    if (TsTypePrinter::$printingTypesStack->contains($this)) {
       throw new \Exception('Circular reference detected in type definition.');
     }
 
-    TsPrinter::$printingTypesStack->attach($this);
+    TsTypePrinter::$printingTypesStack->attach($this);
 
-    return $this->typeDefinition();
-  }
-
-  /**
-   * @return TsType[]
-   */
-  protected abstract function getChildren(): array;
-
-  final public function getRecursiveChildren(): array
-  {
-    $children = $this->getChildren();
-    $result = $children;
-    
-    foreach ($children as $child) {
-      $result = array_merge($result, $child->getRecursiveChildren());
-    }
-
-    return $result;
+    return $this->_printTypeString();
   }
 
   /**
