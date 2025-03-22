@@ -8,9 +8,7 @@ A WIP PHPStan to TypeScript transformer.
 
 Expect everything to break.
 
-## Contributing
-
-### Basic setup
+## Basic dev setup
 
 1. Clone the repository.
 2. swap `composer-dev.json` with `composer.json`.
