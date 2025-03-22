@@ -11,9 +11,7 @@ Expect everything to break.
 ## Basic dev setup
 
 1. Clone the repository.
-2. swap `composer-dev.json` with `composer.json`.
-3. `composer install`
-4. swap `composer.json` with `composer-dev.json` back.
+2. `composer install`
 
 In your test project, you can install a local version of StanScript by adding:
 
