@@ -13,7 +13,7 @@ Expect everything to break.
 1. Clone the repository.
 2. `composer install`
 
-In your test project, you can install a local version of StanScript by adding:
+In your test project, you can install a local version of PHPStan TypeScript Transformer by adding:
 
 ```json
 {
