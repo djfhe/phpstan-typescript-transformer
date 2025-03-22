@@ -1,0 +1,10 @@
+includes:
+    - ./vendor/phpstan/phpstan-strict-rules/rules.neon
+
+parameters:
+    tmpDir: .cache/phpstan
+
+    paths:
+      - src
+
+    level: 10
