@@ -6,13 +6,11 @@
   "require-dev": {
     "php": "^8.2",
     "phpstan/phpstan": "^2.1",
-    "spatie/typescript-transformer": "^2.4",
     "phpstan/phpstan-strict-rules": "^2.0",
     "headercat/phpstan-extension-ide-helper": "^2.1"
   },
   "require": {
-    "phpstan/phpstan": "^2.1",
-    "spatie/typescript-transformer": "^2.4"
+    "phpstan/phpstan": "^2.1"
   },
   "autoload": {
     "psr-4": {
