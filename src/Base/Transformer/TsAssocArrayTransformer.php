@@ -1,11 +1,11 @@
 <?php
 
-namespace djfhe\StanScript\Base\Transformer;
+namespace djfhe\PHPStanTypescriptTransformer\Base\Transformer;
 
-use djfhe\StanScript\TsTypeTransformerContract;
-use djfhe\StanScript\TsType;
-use djfhe\StanScript\Base\Types\TsRecordType;
-use djfhe\StanScript\TsTransformer;
+use djfhe\PHPStanTypescriptTransformer\TsTypeTransformerContract;
+use djfhe\PHPStanTypescriptTransformer\TsType;
+use djfhe\PHPStanTypescriptTransformer\Base\Types\TsRecordType;
+use djfhe\PHPStanTypescriptTransformer\TsTransformer;
 use PHPStan\Type\Type;
 use PHPStan\Analyser\Scope;
 use PHPStan\Reflection\ReflectionProvider;

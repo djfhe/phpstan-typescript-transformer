@@ -1,10 +1,10 @@
 <?php
 
-namespace djfhe\StanScript\Base\Transformer;
+namespace djfhe\PHPStanTypescriptTransformer\Base\Transformer;
 
-use djfhe\StanScript\TsTypeTransformerContract;
-use djfhe\StanScript\Base\Types\TsTupleType;
-use djfhe\StanScript\TsTransformer;
+use djfhe\PHPStanTypescriptTransformer\TsTypeTransformerContract;
+use djfhe\PHPStanTypescriptTransformer\Base\Types\TsTupleType;
+use djfhe\PHPStanTypescriptTransformer\TsTransformer;
 use PHPStan\Type\Type;
 use PHPStan\Analyser\Scope;
 use PHPStan\Reflection\ReflectionProvider;

@@ -1,15 +1,15 @@
 <?php
 
-namespace djfhe\StanScript\LaravelData\Transformer;
+namespace djfhe\PHPStanTypescriptTransformer\LaravelData\Transformer;
 
-use djfhe\StanScript\TsTypeTransformerContract;
+use djfhe\PHPStanTypescriptTransformer\TsTypeTransformerContract;
 use PHPStan\Type\Type;
 use PHPStan\Analyser\Scope;
 use PHPStan\Reflection\ReflectionProvider;
-use djfhe\StanScript\TsType;
-use djfhe\StanScript\Base\Types\TsObjectPropertyType;
-use djfhe\StanScript\Base\Types\TsObjectType;
-use djfhe\StanScript\TsTransformer;
+use djfhe\PHPStanTypescriptTransformer\TsType;
+use djfhe\PHPStanTypescriptTransformer\Base\Types\TsObjectPropertyType;
+use djfhe\PHPStanTypescriptTransformer\Base\Types\TsObjectType;
+use djfhe\PHPStanTypescriptTransformer\TsTransformer;
 use PHPStan\Analyser\OutOfClassScope;
 use ReflectionProperty;
 

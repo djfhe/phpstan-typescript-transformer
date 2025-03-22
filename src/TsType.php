@@ -1,9 +1,9 @@
 <?php
 
-namespace djfhe\StanScript;
+namespace djfhe\PHPStanTypescriptTransformer;
 
-use djfhe\StanScript\TsPrinter\NamedTypesRegistry;
-use djfhe\StanScript\TsPrinter\TsTypePrinter;
+use djfhe\PHPStanTypescriptTransformer\TsPrinter\NamedTypesRegistry;
+use djfhe\PHPStanTypescriptTransformer\TsPrinter\TsTypePrinter;
 
 abstract class TsType {
 

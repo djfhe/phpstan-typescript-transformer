@@ -1,6 +1,6 @@
 <?php
 
-namespace djfhe\StanScript\TsPrinter;
+namespace djfhe\PHPStanTypescriptTransformer\TsPrinter;
 
 class TsNamespaceCollectionPrinter
 {

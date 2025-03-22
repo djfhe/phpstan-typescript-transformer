@@ -1,11 +1,11 @@
 <?php
 
-namespace djfhe\StanScript\LaravelData\Transformer;
+namespace djfhe\PHPStanTypescriptTransformer\LaravelData\Transformer;
 
-use djfhe\StanScript\TsType;
-use djfhe\StanScript\TsTypeTransformerContract;
-use djfhe\StanScript\PHPStan\Typescript\TypescriptTypes\Laravel\TsAbstractPaginatedType;
-use djfhe\StanScript\TsTransformer;
+use djfhe\PHPStanTypescriptTransformer\TsType;
+use djfhe\PHPStanTypescriptTransformer\TsTypeTransformerContract;
+use djfhe\PHPStanTypescriptTransformer\PHPStan\Typescript\TypescriptTypes\Laravel\TsAbstractPaginatedType;
+use djfhe\PHPStanTypescriptTransformer\TsTransformer;
 use PHPStan\Analyser\Scope;
 use PHPStan\Reflection\ReflectionProvider;
 use PHPStan\Type\Type;

@@ -1,9 +1,9 @@
 <?php
 
-namespace djfhe\StanScript\Base\Types;
+namespace djfhe\PHPStanTypescriptTransformer\Base\Types;
 
-use djfhe\StanScript\IsSingleton;
-use djfhe\StanScript\TsType;
+use djfhe\PHPStanTypescriptTransformer\IsSingleton;
+use djfhe\PHPStanTypescriptTransformer\TsType;
 
 class TsNeverType extends TsType
 {

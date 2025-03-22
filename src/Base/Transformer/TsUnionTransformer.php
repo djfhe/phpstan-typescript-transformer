@@ -1,13 +1,13 @@
 <?php
 
-namespace djfhe\StanScript\Base\Transformer;
+namespace djfhe\PHPStanTypescriptTransformer\Base\Transformer;
 
-use djfhe\StanScript\TsTypeTransformerContract;
-use djfhe\StanScript\Base\Types\TsNeverType;
-use djfhe\StanScript\PHPStan\TsTypeParser;
-use djfhe\StanScript\TsType;
-use djfhe\StanScript\Base\Types\TsUnionType;
-use djfhe\StanScript\TsTransformer;
+use djfhe\PHPStanTypescriptTransformer\TsTypeTransformerContract;
+use djfhe\PHPStanTypescriptTransformer\Base\Types\TsNeverType;
+use djfhe\PHPStanTypescriptTransformer\PHPStan\TsTypeParser;
+use djfhe\PHPStanTypescriptTransformer\TsType;
+use djfhe\PHPStanTypescriptTransformer\Base\Types\TsUnionType;
+use djfhe\PHPStanTypescriptTransformer\TsTransformer;
 use PHPStan\Type\Type;
 use PHPStan\Analyser\Scope;
 use PHPStan\Reflection\ReflectionProvider;

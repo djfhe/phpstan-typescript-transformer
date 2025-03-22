@@ -1,9 +1,9 @@
 <?php
 
-namespace djfhe\StanScript\Base\Transformer;
+namespace djfhe\PHPStanTypescriptTransformer\Base\Transformer;
 
-use djfhe\StanScript\TsTypeTransformerContract;
-use djfhe\StanScript\Base\Types\TsNeverType;
+use djfhe\PHPStanTypescriptTransformer\TsTypeTransformerContract;
+use djfhe\PHPStanTypescriptTransformer\Base\Types\TsNeverType;
 use PHPStan\Type\Type;
 use PHPStan\Analyser\Scope;
 use PHPStan\Reflection\ReflectionProvider;

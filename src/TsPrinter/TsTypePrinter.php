@@ -1,8 +1,8 @@
 <?php
 
-namespace djfhe\StanScript\TsPrinter;
+namespace djfhe\PHPStanTypescriptTransformer\TsPrinter;
 
-use djfhe\StanScript\TsType;
+use djfhe\PHPStanTypescriptTransformer\TsType;
 use PHPStan\Analyser\Error;
 use PHPStan\Rules\IdentifierRuleError;
 use PHPStan\Rules\RuleError;
@@ -21,7 +21,7 @@ final class TsTypePrinter implements TsTypePrinterContract
       self::$printingTypesStack = new SplObjectStorage();
   }
 
-  public static string $error_identifier = 'djfhe.StanScript.printTsType';
+  public static string $error_identifier = 'djfhe.PHPStanTypescriptTransformer.printTsType';
 
     public function __construct(
       public string $name,

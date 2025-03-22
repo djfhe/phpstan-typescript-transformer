@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace djfhe\StanScript\Laravel\Rules;
+namespace djfhe\PHPStanTypescriptTransformer\Laravel\Rules;
 
-use djfhe\StanScript\Base\Types\TsObjectType;
-use djfhe\StanScript\Base\Types\TsUnionType;
-use djfhe\StanScript\TsPrinter\TsTypePrinter;
-use djfhe\StanScript\TsTransformer;
+use djfhe\PHPStanTypescriptTransformer\Base\Types\TsObjectType;
+use djfhe\PHPStanTypescriptTransformer\Base\Types\TsUnionType;
+use djfhe\PHPStanTypescriptTransformer\TsPrinter\TsTypePrinter;
+use djfhe\PHPStanTypescriptTransformer\TsTransformer;
 use PhpParser\Node;
 use PHPStan\Analyser\Scope;
 use PHPStan\Node\ReturnStatement;

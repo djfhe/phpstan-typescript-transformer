@@ -1,5 +1,5 @@
 {
-  "name": "djfhe/stanscript",
+  "name": "djfhe/phpstan-typescript-transformer",
   "type": "library",
   "license": "MIT",
   "version": "0.0.1",
@@ -16,7 +16,7 @@
   },
   "autoload": {
     "psr-4": {
-      "djfhe\\StanScript\\": "src"
+      "djfhe\\PHPStanTypescriptTransformer\\": "src"
     }
   },
   "authors": [

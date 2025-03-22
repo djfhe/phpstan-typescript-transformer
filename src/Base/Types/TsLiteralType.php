@@ -1,6 +1,6 @@
 <?php
 
-use djfhe\StanScript\TsType;
+use djfhe\PHPStanTypescriptTransformer\TsType;
 
 class TsLiteralType extends TsType
 {

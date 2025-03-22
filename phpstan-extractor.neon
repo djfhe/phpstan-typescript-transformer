@@ -9,8 +9,8 @@ parameters:
   
 services:
   errorFormatter.tsprinter:
-    class: djfhe\StanScript\TsPrinter\TsPrinter
+    class: djfhe\PHPStanTypescriptTransformer\TsPrinter\TsPrinter
   - 
-    class: djfhe\StanScript\Laravel\Rules\ControllerInertiaReturnRule
+    class: djfhe\PHPStanTypescriptTransformer\Laravel\Rules\ControllerInertiaReturnRule
     tags:
       - phpstan.rules.rule

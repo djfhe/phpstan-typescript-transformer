@@ -1,6 +1,6 @@
 <?php
 
-namespace djfhe\StanScript;
+namespace djfhe\PHPStanTypescriptTransformer;
 
 trait IsSingleton
 {

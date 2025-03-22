@@ -1,9 +1,9 @@
 <?php
 
-namespace djfhe\StanScript\PHPStan\Typescript\TypescriptTypes\Laravel;
+namespace djfhe\PHPStanTypescriptTransformer\PHPStan\Typescript\TypescriptTypes\Laravel;
 
-use djfhe\StanScript\IsSingleton;
-use djfhe\StanScript\TsType;
+use djfhe\PHPStanTypescriptTransformer\IsSingleton;
+use djfhe\PHPStanTypescriptTransformer\TsType;
 
 class TsPaginatedLinkType extends TsType
 {

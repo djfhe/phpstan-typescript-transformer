@@ -1,8 +1,8 @@
 <?php
 
-namespace djfhe\StanScript\Base\Types;
+namespace djfhe\PHPStanTypescriptTransformer\Base\Types;
 
-use djfhe\StanScript\TsType;
+use djfhe\PHPStanTypescriptTransformer\TsType;
 
 class TsUnionType extends TsType
 {

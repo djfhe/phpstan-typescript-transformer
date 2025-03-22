@@ -1,8 +1,8 @@
 <?php
 
-namespace djfhe\StanScript\PHPStan\Typescript\TypescriptTypes\Laravel;
+namespace djfhe\PHPStanTypescriptTransformer\PHPStan\Typescript\TypescriptTypes\Laravel;
 
-use djfhe\StanScript\TsType;
+use djfhe\PHPStanTypescriptTransformer\TsType;
 
 class TsAbstractPaginatedType extends TsType
 {

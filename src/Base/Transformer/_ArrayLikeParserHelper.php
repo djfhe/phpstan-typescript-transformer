@@ -1,10 +1,10 @@
 <?php
 
-namespace djfhe\StanScript\Base\Transformer;
+namespace djfhe\PHPStanTypescriptTransformer\Base\Transformer;
 
-use djfhe\StanScript\Base\Types\TsRecordType;
-use djfhe\StanScript\Base\Types\TsSimpleArrayType;
-use djfhe\StanScript\TsTransformer;
+use djfhe\PHPStanTypescriptTransformer\Base\Types\TsRecordType;
+use djfhe\PHPStanTypescriptTransformer\Base\Types\TsSimpleArrayType;
+use djfhe\PHPStanTypescriptTransformer\TsTransformer;
 use PHPStan\Type\Type;
 use PHPStan\Analyser\Scope;
 use PHPStan\Reflection\ReflectionProvider;
