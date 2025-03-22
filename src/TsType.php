@@ -10,7 +10,7 @@ abstract class TsType {
   private ?string $name = null;
 
   /**
-   * @return array<string,string>
+   * @var array<string,?string>
    */
   private ?array $genericParametersCache = null;
 
@@ -28,7 +28,7 @@ abstract class TsType {
   protected abstract function typeDefinition(): string;
 
   /**
-   * @return array<string,string>
+   * @return array<string,?string>
    */
   protected function genericParameters(): array
   {
@@ -36,7 +36,7 @@ abstract class TsType {
   }
 
   /**
-   * @return array<string,string>
+   * @return array<string,?string>
    */
   final public function _genericParameters(): array
   {
@@ -66,6 +66,8 @@ abstract class TsType {
           genericKeys: $genericKeys
         );
       }
+
+      $genericParameters = array_filter($genericParameters, fn ($value) => $value !== null);
 
       $genericValuesString = count($genericParameters) > 0 ? '<' . implode(',', array_values($genericParameters)) . '>' : '';
       return $identifier . $genericValuesString;
