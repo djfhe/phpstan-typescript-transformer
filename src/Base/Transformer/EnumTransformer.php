@@ -10,7 +10,7 @@ use PHPStan\Analyser\Scope;
 use PHPStan\Reflection\ReflectionProvider;
 use PHPStan\Type\Type;
 
-class EnumParser implements TsTypeTransformerContract
+class EnumTransformer implements TsTypeTransformerContract
 {
     public static function canTransform(Type $type, Scope $scope, ReflectionProvider $reflectionProvider): bool {
 

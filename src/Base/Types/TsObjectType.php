@@ -34,9 +34,9 @@ class TsObjectType extends TsType
     {
         $properties = [];
         foreach ($this->properties as $value) {
-            $properties[] = $value->printTypeString();
+            $properties[] = $value->printTypeString() . ";";
         }
 
-        return "{ " . implode("; ", $properties) . " }";
+        return "{" . PHP_EOL . implode(PHP_EOL, $properties) . PHP_EOL . "}";
     }
 }

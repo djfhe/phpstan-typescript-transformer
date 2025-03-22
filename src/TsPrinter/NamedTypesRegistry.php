@@ -20,11 +20,7 @@ class NamedTypesRegistry
       return self::$typeNameToIdentifier[$name] ?? null;
     }
 
-    /**
-     * @param 'interface'|'type' $keyword
-     * @param string[] $genericKeys
-     */
-    public static function registerNamedType(string $keyword, string $name, string $printedType, array $genericKeys = []): string
+    public static function registerNamedType(string $name): string
     {
       if (array_key_exists($name, self::$typeNameToIdentifier)) {
         return self::$typeNameToIdentifier[$name];
@@ -34,6 +30,15 @@ class NamedTypesRegistry
 
       self::$typeNameToIdentifier[$name] = $identifier;
 
+      return $identifier;
+    }
+
+    /**
+     * @param 'interface'|'type' $keyword
+     * @param string[] $genericKeys
+     */
+    public static function addNamedType(string $identifier, string $keyword, string $name, string $printedType, array $genericKeys = []): string
+    {
       $namespace = TsPrinterUtil::getNamespace($name);
       $name = TsPrinterUtil::getName($name);
 

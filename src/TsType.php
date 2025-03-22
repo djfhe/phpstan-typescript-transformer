@@ -50,21 +50,30 @@ abstract class TsType {
   }
 
   final public function printTypeString(): string
-  {
-    if ($this->getName() !== null) {
+  { 
+    $name = $this->getName();
+
+    if ($name !== null) {
       $genericParameters = $this->_genericParameters();
 
-      $identifier = NamedTypesRegistry::getNamedTypeIdentifier($this->getName());
+      $identifier = NamedTypesRegistry::getNamedTypeIdentifier($name);
 
       if ($identifier === null) {
+        $identifier = NamedTypesRegistry::registerNamedType($name);
+
         $genericKeys = array_keys($genericParameters);
 
-        $identifier = NamedTypesRegistry::registerNamedType(
+        TsTypePrinter::$printingTypesStack->attach($this);
+
+        $identifier = NamedTypesRegistry::addNamedType(
+          identifier: $identifier,
           keyword: $this->definitionKeyword(),
-          name: $this->getName(),
+          name: $name,
           printedType: $this->typeDefinition(),
           genericKeys: $genericKeys
         );
+
+        TsTypePrinter::$printingTypesStack->detach($this);
       }
 
       $genericParameters = array_filter($genericParameters, fn ($value) => $value !== null);
@@ -74,12 +83,16 @@ abstract class TsType {
     }
 
     if (TsTypePrinter::$printingTypesStack->contains($this)) {
-      throw new \Exception('Circular reference detected in type definition.');
+      throw new \Exception('Circular reference type without a name detected in type definition.');
     }
 
     TsTypePrinter::$printingTypesStack->attach($this);
 
-    return $this->typeDefinition();
+    $definition = $this->typeDefinition();
+
+    TsTypePrinter::$printingTypesStack->detach($this);
+
+    return $definition;
   }
 
   /**

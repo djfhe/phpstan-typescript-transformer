@@ -19,9 +19,15 @@ use PHPStan\Rules\RuleErrorBuilder;
  */
 class ControllerInertiaReturnRule implements \PHPStan\Rules\Rule
 {
+
+    public static \Larastan\Larastan\Properties\ModelPropertyHelper $propertyHelper;
+
     public function __construct(
-        private ReflectionProvider $reflectionProvider
-    ) {}
+        private ReflectionProvider $reflectionProvider,
+        \Larastan\Larastan\Properties\ModelPropertyHelper $propertyHelper,
+    ) {
+        self::$propertyHelper = $propertyHelper;
+    }
 
     public function getNodeType(): string
     {

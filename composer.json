@@ -7,7 +7,8 @@
     "php": "^8.2",
     "phpstan/phpstan": "^2.1",
     "phpstan/phpstan-strict-rules": "^2.0",
-    "headercat/phpstan-extension-ide-helper": "^2.1"
+    "headercat/phpstan-extension-ide-helper": "^2.1",
+    "larastan/larastan": "^3.2"
   },
   "require": {
     "phpstan/phpstan": "^2.1"

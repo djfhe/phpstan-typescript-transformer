@@ -8,7 +8,7 @@ class TsScalarType extends TsType
 {
     
     public function __construct(
-        protected string $value
+        public string $value
     ) {}
 
     protected function typeDefinition(): string
