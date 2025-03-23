@@ -13,10 +13,6 @@ class TsNamespacePrinter
     public function addTsTypePrinter(TsTypePrinterContract $type): void
     {
         $declaration = $type->printTypeString();
-        
-        if (!str_ends_with($declaration, ';')) {
-            $declaration .= ';';
-        }
 
         $this->declarations[$type->getTsName()] = $declaration;
     }
@@ -34,7 +30,7 @@ class TsNamespacePrinter
             return $printed;
         }
 
-        return "namespace $name {" . PHP_EOL . $printed . PHP_EOL . "}";
+        return "declare namespace $name {" . PHP_EOL . $printed . PHP_EOL . "}";
     }
 
     public function compareTo(TsNamespacePrinter $other): int
