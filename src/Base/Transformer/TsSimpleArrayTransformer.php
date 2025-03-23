@@ -8,7 +8,6 @@ use djfhe\PHPStanTypescriptTransformer\TsTransformer;
 use PHPStan\Type\Type;
 use PHPStan\Analyser\Scope;
 use PHPStan\Reflection\ReflectionProvider;
-use PHPStan\Type\Accessory\AccessoryArrayListType;
 use PHPStan\Type\ArrayType;
 
 /**
@@ -17,27 +16,19 @@ use PHPStan\Type\ArrayType;
 class TsSimpleArrayTransformer implements TsTypeTransformerContract
 {
     public static function canTransform(Type $type, Scope $scope, ReflectionProvider $reflectionProvider): bool {
-        if (!$type instanceof ArrayType && !$type instanceof AccessoryArrayListType) {
+        if (! $type instanceof ArrayType) {
             return false;
         }
 
-        if ($type instanceof ArrayType) {
-          $keyType = $type->getKeyType();
-        } else {
-          $keyType = $type->getIterableKeyType();
-        }
+        $keyType = $type->getKeyType();
 
         return $keyType instanceof \PHPStan\Type\IntegerType;
     }
 
     public static function transform(Type $type, Scope $scope, ReflectionProvider $reflectionProvider): TsSimpleArrayType {
-      /** @var ArrayType|AccessoryArrayListType $type */
+      /** @var ArrayType $type */
       
-      if ($type instanceof ArrayType) {
-        $valueType = $type->getItemType();
-      } else {
-        $valueType = $type->getIterableValueType();
-      }
+      $valueType = $type->getItemType();
       
       return new TsSimpleArrayType(TsTransformer::transform($valueType, $scope, $reflectionProvider));
     }
