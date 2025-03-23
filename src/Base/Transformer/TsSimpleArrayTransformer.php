@@ -8,6 +8,8 @@ use djfhe\PHPStanTypescriptTransformer\TsTransformer;
 use PHPStan\Type\Type;
 use PHPStan\Analyser\Scope;
 use PHPStan\Reflection\ReflectionProvider;
+use PHPStan\Type\Accessory\AccessoryArrayListType;
+use PHPStan\Type\ArrayType;
 
 /**
  * A simple homogeneous array type. For example: `string[]`, `number[]`, `(string | number)[]`, `never[]`, etc.
@@ -15,19 +17,27 @@ use PHPStan\Reflection\ReflectionProvider;
 class TsSimpleArrayTransformer implements TsTypeTransformerContract
 {
     public static function canTransform(Type $type, Scope $scope, ReflectionProvider $reflectionProvider): bool {
-        if (!$type instanceof \PHPStan\Type\ArrayType) {
+        if (!$type instanceof ArrayType && !$type instanceof AccessoryArrayListType) {
             return false;
         }
 
-        $keyType = $type->getKeyType();
+        if ($type instanceof ArrayType) {
+          $keyType = $type->getKeyType();
+        } else {
+          $keyType = $type->getIterableKeyType();
+        }
 
         return $keyType instanceof \PHPStan\Type\IntegerType;
     }
 
     public static function transform(Type $type, Scope $scope, ReflectionProvider $reflectionProvider): TsSimpleArrayType {
-      /** @var \PHPStan\Type\ArrayType $type */
-
-      $valueType = $type->getItemType();
+      /** @var ArrayType|AccessoryArrayListType $type */
+      
+      if ($type instanceof ArrayType) {
+        $valueType = $type->getItemType();
+      } else {
+        $valueType = $type->getIterableValueType();
+      }
       
       return new TsSimpleArrayType(TsTransformer::transform($valueType, $scope, $reflectionProvider));
     }
