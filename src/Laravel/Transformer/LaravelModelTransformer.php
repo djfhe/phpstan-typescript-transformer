@@ -53,18 +53,35 @@ class LaravelModelTransformer implements TsTypeTransformerContract
       }
 
       $props = LaravelModelHelper::getModelProperties($classReflection);
+      $accessors = LaravelModelHelper::getAccessorProperties($classReflection);
       $relations = LaravelModelHelper::getModelRelations($classReflection);
 
-      if ($props === null && $relations === null) {
+      if ($props === null && $accessors === null && $relations === null) {
         return new TsScalarType('unknown');
       }
 
       $props = $props ?? [];
+      $accessors = $accessors ?? [];
       $relations = $relations ?? [];
 
+      $hidden = LaravelModelHelper::hiddenAttributes($classReflection);
+      $visible = LaravelModelHelper::visibleAttributes($classReflection);
+      $appends = LaravelModelHelper::appendedAttributes($classReflection);
+
+      $props = array_filter($props, fn ($key) => !in_array($key, $hidden, true), ARRAY_FILTER_USE_KEY);
+      $accessors = array_filter($accessors, fn ($key) => !in_array($key, $hidden, true), ARRAY_FILTER_USE_KEY);
+      $relations = array_filter($relations, fn ($key) => !in_array($key, $hidden, true), ARRAY_FILTER_USE_KEY);
+
+      if (count($visible) > 0) {
+        $props = array_filter($props, fn ($key) => in_array($key, $visible, true), ARRAY_FILTER_USE_KEY);
+        $accessors = array_filter($accessors, fn ($key) => in_array($key, $visible, true), ARRAY_FILTER_USE_KEY);
+        $relations = array_filter($relations, fn ($key) => in_array($key, $visible, true), ARRAY_FILTER_USE_KEY);
+      }
+
       $tsProps = array_map(fn (\PHPStan\Type\Type $prop, string $key) => new TsObjectPropertyType($key, TsTransformer::transform($prop, $scope, $reflectionProvider)), $props, array_keys($props));
-      $tsRelations = array_map(fn (\PHPStan\Type\Type $relation, string $key) => new TsObjectPropertyType($key, TsTransformer::transform($relation, $scope, $reflectionProvider), true), $relations, array_keys($relations));
-      $tsProps = array_merge($tsProps, $tsRelations);
+      $tsAccessors = array_map(fn (\PHPStan\Type\Type $accessor, string $key) => new TsObjectPropertyType($key, TsTransformer::transform($accessor, $scope, $reflectionProvider), !in_array($key, $appends, true)), $accessors, array_keys($accessors));
+      $tsRelations = array_map(fn (\PHPStan\Type\Type $relation, string $key) => new TsObjectPropertyType($key, TsTransformer::transform($relation, $scope, $reflectionProvider), !in_array($key, $appends, true)), $relations, array_keys($relations));
+      $tsProps = array_merge($tsProps, $tsAccessors, $tsRelations);
 
       return (new TsObjectType($tsProps))->setName($type->getClassName());
     }

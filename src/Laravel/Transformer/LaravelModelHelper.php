@@ -3,11 +3,14 @@
 namespace djfhe\PHPStanTypescriptTransformer\Laravel\Transformer;
 
 use djfhe\PHPStanTypescriptTransformer\Laravel\Rules\ControllerInertiaReturnRule;
+use Exception;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use PHPStan\Analyser\OutOfClassScope;
 use PHPStan\Reflection\ClassReflection;
+use PHPStan\Type\Constant\ConstantArrayType;
+use PHPStan\Type\Constant\ConstantStringType;
 use PHPStan\Type\ObjectType;
 use ReflectionException;
 use ReflectionMethod;
@@ -30,14 +33,26 @@ class LaravelModelHelper
     // trigger migration loading
     $classReflection->hasProperty('id');
 
-    $databaseProperties = self::getDatabaseProperties($classReflection);
-    $accessorProperties = self::getModelAccessors($classReflection);
+    return self::getDatabaseProperties($classReflection);
+  }
 
-    if ($databaseProperties === null && $accessorProperties === null) {
+  /**
+   * @param ClassReflection $classReflection
+   * @return ?array<string,\PHPStan\Type\Type>
+   */
+  public static function getAccessorProperties(ClassReflection $classReflection): ?array
+  {
+    if (! $classReflection->is(Model::class)) {
+      return null;
+    }
+
+    if ($classReflection->isAbstract()) {
         return null;
     }
-    
-    return array_merge($databaseProperties ?? [], $accessorProperties ?? []);
+    // trigger migration loading
+    $classReflection->hasProperty('id');
+
+    return self::getModelAccessors($classReflection);
   }
 
   /**
@@ -180,5 +195,133 @@ class LaravelModelHelper
     }
 
     return array_filter($relations, fn($relation) => $relation !== null);
+  }
+
+  /**
+   * @return list<string>
+   */
+  public static function hiddenAttributes(ClassReflection $classReflection): array
+  {
+    if (! $classReflection->is(Model::class)) {
+      return [];
+    }
+
+    if ($classReflection->isAbstract()) {
+        return [];
+    }
+
+    if (!$classReflection->hasProperty('hidden')) {
+        return [];
+    }
+
+
+    try {
+      /** @var Model */
+      $modelInstance = $classReflection->getNativeReflection()->newInstanceWithoutConstructor();
+      return array_values($modelInstance->getHidden());
+    } catch (Exception) {}
+
+    $hidden = $classReflection->getProperty('hidden', new OutOfClassScope())->getReadableType();
+
+    if (!$hidden instanceof ConstantArrayType) {
+        return [];
+    }
+
+    $hidden = $hidden->getValueTypes();
+
+    $hiddenProperties = [];
+
+    foreach ($hidden as $value) {
+        if ($value instanceof ConstantStringType) {
+            $hiddenProperties[] = $value->getValue();
+        }
+    }
+
+    return $hiddenProperties;
+  }
+
+  /**
+   * @return list<string>
+   */
+  public static function visibleAttributes(ClassReflection $classReflection): array
+  {
+    if (! $classReflection->is(Model::class)) {
+      return [];
+    }
+
+    if ($classReflection->isAbstract()) {
+        return [];
+    }
+
+    if (!$classReflection->hasProperty('visible')) {
+        return [];
+    }
+
+    try {
+      /** @var Model */
+      $modelInstance = $classReflection->getNativeReflection()->newInstanceWithoutConstructor();
+      return array_values($modelInstance->getVisible());
+    } catch (Exception) {}
+
+    $visible = $classReflection->getProperty('visible', new OutOfClassScope())->getReadableType();
+
+    if (!$visible instanceof ConstantArrayType) {
+        return [];
+    }
+
+    $visible = $visible->getValueTypes();
+
+    $visibleProperties = [];
+
+    foreach ($visible as $value) {
+        if ($value instanceof ConstantStringType) {
+            $visibleProperties[] = $value->getValue();
+        }
+    }
+
+    return $visibleProperties;
+  }
+
+  /**
+   * @return list<string>
+   */
+  public static function appendedAttributes(ClassReflection $classReflection): array
+  {
+    if (! $classReflection->is(Model::class)) {
+      return [];
+    }
+
+    if ($classReflection->isAbstract()) {
+        return [];
+    }
+
+    if (!$classReflection->hasProperty('appends')) {
+        return [];
+    }
+    
+    try {
+      /** @var Model */
+      $modelInstance = $classReflection->getNativeReflection()->newInstanceWithoutConstructor();
+      // @phpstan-ignore return.type
+      return array_values($modelInstance->getAppends());
+    } catch (Exception) {}
+
+    $appends = $classReflection->getProperty('appends', new OutOfClassScope())->getReadableType();
+
+    if (!$appends instanceof ConstantArrayType) {
+        return [];
+    }
+
+    $appends = $appends->getValueTypes();
+
+    $appendedProperties = [];
+
+    foreach ($appends as $value) {
+        if ($value instanceof ConstantStringType) {
+            $appendedProperties[] = $value->getValue();
+        }
+    }
+
+    return $appendedProperties;
   }
 }
