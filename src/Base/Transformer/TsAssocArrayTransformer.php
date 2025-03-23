@@ -9,6 +9,10 @@ use djfhe\PHPStanTypescriptTransformer\TsTransformer;
 use PHPStan\Type\Type;
 use PHPStan\Analyser\Scope;
 use PHPStan\Reflection\ReflectionProvider;
+use PHPStan\Type\IntegerType;
+use PHPStan\Type\MixedType;
+use PHPStan\Type\StringType;
+use PHPStan\Type\UnionType;
 
 class TsAssocArrayTransformer implements TsTypeTransformerContract
 {
@@ -27,6 +31,14 @@ class TsAssocArrayTransformer implements TsTypeTransformerContract
       /** @var \PHPStan\Type\ArrayType $type */
 
       $keyType = $type->getKeyType();
+
+      // Mixed should not result in unknown in a record.
+      // Thus we convert it to the union of string and int.
+      // These are the only possible key types that PHP produces.
+      if ($keyType instanceof MixedType) {
+        $keyType = new UnionType([new StringType(), new IntegerType()]);
+      }
+
       $valueType = $type->getItemType();
       
       return new TsRecordType(TsTransformer::transform($keyType, $scope, $reflectionProvider), TsTransformer::transform($valueType, $scope, $reflectionProvider));
