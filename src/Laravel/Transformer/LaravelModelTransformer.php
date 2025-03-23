@@ -17,17 +17,7 @@ class LaravelModelTransformer implements TsTypeTransformerContract
 {
     public static function canTransform(Type $type, Scope $scope, ReflectionProvider $reflectionProvider): bool
     {
-      if (!$reflectionProvider->hasClass(Model::class)) {
-        return false;
-      }
-
       if (!$type instanceof \PHPStan\Type\ObjectType) {
-        return false;
-      }
-
-      /** @var \PHPStan\Type\ObjectType $type */
-
-      if (!$type->isEnum()->no()) {
         return false;
       }
 
@@ -36,10 +26,8 @@ class LaravelModelTransformer implements TsTypeTransformerContract
       if ($reflection === null) {
         return false;
       }
-
-      $modelClass = $reflectionProvider->getClass(Model::class);
       
-      return $reflection->isSubclassOfClass($modelClass) || $reflection->getName() === Model::class;
+      return $reflection->is(Model::class);
     }
 
     public static function transform(Type $type, Scope $scope, ReflectionProvider $reflectionProvider): TsScalarType|TsObjectType
