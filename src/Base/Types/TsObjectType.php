@@ -25,11 +25,6 @@ class TsObjectType extends TsType
         return count($this->properties);
     }
 
-    public function definitionKeyword(): string
-    {
-        return "interface";
-    }
-
     protected function typeDefinition(): string
     {
         $properties = [];
