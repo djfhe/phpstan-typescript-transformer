@@ -13,6 +13,7 @@ use PHPStan\Analyser\Scope;
 use PHPStan\Node\ReturnStatement;
 use PHPStan\Reflection\ReflectionProvider;
 use PHPStan\Rules\RuleErrorBuilder;
+use PHPStan\Type\VerbosityLevel;
 
 /**
  * @implements \PHPStan\Rules\Rule<\PHPStan\Node\MethodReturnStatementsNode>
@@ -47,8 +48,8 @@ class ControllerInertiaReturnRule implements \PHPStan\Rules\Rule
         /**
          * @var array<array{0: ?\PhpParser\Node\Expr, 1: Scope}>
          */
-        $args = array_map(function (ReturnStatement $return) {
-            return [$this->getInertiaReturnStatementArgs($return->getReturnNode()), $return->getScope()];
+        $args = array_map(function (ReturnStatement $return) use ($scope) {
+            return [$this->getInertiaReturnStatementArgs($return->getReturnNode(), $scope), $return->getScope()];
         }, $returns);
 
         /**
@@ -131,44 +132,80 @@ class ControllerInertiaReturnRule implements \PHPStan\Rules\Rule
         return $returnStatements;
     }
 
-    protected function getInertiaReturnStatementArgs(\PhpParser\Node\Stmt\Return_ $returnStatement): ?\PhpParser\Node\Expr
+    protected function getInertiaFuncCallArgs(\PhpParser\Node\Expr\FuncCall $funcCall, Scope $scope): ?\PhpParser\Node\Expr
     {
-        $args = [];
-
-        $inertiaExpr = $returnStatement->expr;
-
-        if (! $inertiaExpr instanceof \PhpParser\Node\Expr\StaticCall) {
+        if (! $funcCall->name instanceof \PhpParser\Node\Name) {
             return null;
         }
 
-        if (! $inertiaExpr->class instanceof \PhpParser\Node\Name\FullyQualified) {
+        if (!$this->reflectionProvider->hasFunction($funcCall->name, $scope)) {
             return null;
         }
 
-        if ($inertiaExpr->class->name !== 'Inertia\Inertia') {
+        $type = $this->reflectionProvider->getFunction($funcCall->name, $scope);
+        
+        if ($type->getName() !== 'inertia') {
             return null;
         }
 
-        if (! $inertiaExpr->name instanceof \PhpParser\Node\Identifier) {
+        if (count($funcCall->args) !== 2) {
             return null;
         }
 
-        if ($inertiaExpr->name->name !== 'render') {
-            return null;
-        }
-
-        if (count($inertiaExpr->args) !== 2) {
-            return null;
-        }
-
-        $inertiaArg = $inertiaExpr->args[1];
+        $inertiaArg = $funcCall->args[1];
 
         if (! $inertiaArg instanceof \PhpParser\Node\Arg) {
             return null;
         }
 
-        $value = $inertiaArg->value;
+        return $inertiaArg->value;
+    }
 
-        return $value;
+    protected function getInertiaStaticCallArgs(\PhpParser\Node\Expr\StaticCall $staticCall): ?\PhpParser\Node\Expr
+    {
+        
+        if (! $staticCall->class instanceof \PhpParser\Node\Name\FullyQualified) {
+            return null;
+        }
+
+        if ($staticCall->class->name !== 'Inertia\\Inertia') {
+            return null;
+        }
+
+        if (! $staticCall->name instanceof \PhpParser\Node\Identifier) {
+            return null;
+        }
+
+        if ($staticCall->name->name !== 'render') {
+            return null;
+        }
+
+        if (count($staticCall->args) !== 2) {
+            return null;
+        }
+
+        $inertiaArg = $staticCall->args[1];
+
+        if (! $inertiaArg instanceof \PhpParser\Node\Arg) {
+            return null;
+        }
+
+        return $inertiaArg->value;
+    }
+
+    protected function getInertiaReturnStatementArgs(\PhpParser\Node\Stmt\Return_ $returnStatement, Scope $scope): ?\PhpParser\Node\Expr
+    {
+        $inertiaExpr = $returnStatement->expr;
+
+        if ($inertiaExpr instanceof \PhpParser\Node\Expr\FuncCall) {
+            return $this->getInertiaFuncCallArgs($inertiaExpr, $scope);
+        }
+
+
+        if ($inertiaExpr instanceof \PhpParser\Node\Expr\StaticCall) {
+            return $this->getInertiaStaticCallArgs($inertiaExpr);
+        }
+
+        return null;
     }
 }
