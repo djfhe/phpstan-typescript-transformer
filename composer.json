@@ -21,7 +21,11 @@
   "authors": [
     {
       "name": "Daniel Thoma",
-      "email": "dt@clickbar.dev"
+      "email": "daniel.thoma@hey.com"
+    },
+    {
+      "name": "Tobias Kröll",
+      "email": "hello@saibotk.de"
     }
   ],
   "minimum-stability": "stable"
