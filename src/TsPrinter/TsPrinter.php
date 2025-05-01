@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace djfhe\PHPStanTypescriptTransformer\TsPrinter;
 
-use djfhe\PHPStanTypescriptTransformer\TsType;
 use PHPStan\Command\AnalysisResult;
 use PHPStan\Command\Output;
 

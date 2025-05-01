@@ -4,7 +4,6 @@ namespace djfhe\PHPStanTypescriptTransformer\Base\Transformer;
 
 use djfhe\PHPStanTypescriptTransformer\TsTypeTransformerContract;
 use djfhe\PHPStanTypescriptTransformer\Base\Types\TsNeverType;
-use djfhe\PHPStanTypescriptTransformer\PHPStan\TsTypeParser;
 use djfhe\PHPStanTypescriptTransformer\TsType;
 use djfhe\PHPStanTypescriptTransformer\Base\Types\TsUnionType;
 use djfhe\PHPStanTypescriptTransformer\TsTransformer;

@@ -12,8 +12,6 @@ use PhpParser\Node;
 use PHPStan\Analyser\Scope;
 use PHPStan\Node\ReturnStatement;
 use PHPStan\Reflection\ReflectionProvider;
-use PHPStan\Rules\RuleErrorBuilder;
-use PHPStan\Type\VerbosityLevel;
 
 /**
  * @implements \PHPStan\Rules\Rule<\PHPStan\Node\MethodReturnStatementsNode>

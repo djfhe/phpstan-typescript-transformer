@@ -6,7 +6,6 @@ use djfhe\PHPStanTypescriptTransformer\Base\Types\TsObjectPropertyType;
 use djfhe\PHPStanTypescriptTransformer\Base\Types\TsObjectType;
 use djfhe\PHPStanTypescriptTransformer\TsTypeTransformerContract;
 use djfhe\PHPStanTypescriptTransformer\Base\Types\TsScalarType;
-use djfhe\PHPStanTypescriptTransformer\Laravel\Rules\ControllerInertiaReturnRule;
 use djfhe\PHPStanTypescriptTransformer\TsTransformer;
 use Illuminate\Database\Eloquent\Model;
 use PHPStan\Analyser\Scope;

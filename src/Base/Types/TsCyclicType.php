@@ -2,7 +2,6 @@
 
 namespace djfhe\PHPStanTypescriptTransformer\Base\Types;
 
-use djfhe\PHPStanTypescriptTransformer\IsSingleton;
 use djfhe\PHPStanTypescriptTransformer\TsType;
 
 class TsCyclicType extends TsType

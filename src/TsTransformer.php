@@ -3,8 +3,6 @@
 namespace djfhe\PHPStanTypescriptTransformer;
 
 use djfhe\PHPStanTypescriptTransformer\Base\Types\TsCyclicType;
-use djfhe\PHPStanTypescriptTransformer\TsType;
-use djfhe\PHPStanTypescriptTransformer\TsTypeTransformerContract;
 use PHPStan\Analyser\Scope;
 use PHPStan\Reflection\ReflectionProvider;
 use PHPStan\Type\Type;
