@@ -1,5 +1,7 @@
 <?php
 
+namespace djfhe\PHPStanTypescriptTransformer\Base\Types;
+
 use djfhe\PHPStanTypescriptTransformer\TsType;
 
 class TsLiteralType extends TsType

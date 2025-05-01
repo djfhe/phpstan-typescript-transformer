@@ -4,7 +4,7 @@ namespace djfhe\PHPStanTypescriptTransformer\LaravelData\Transformer;
 
 use djfhe\PHPStanTypescriptTransformer\TsType;
 use djfhe\PHPStanTypescriptTransformer\TsTypeTransformerContract;
-use djfhe\PHPStanTypescriptTransformer\PHPStan\Typescript\TypescriptTypes\Laravel\TsAbstractPaginatedType;
+use djfhe\PHPStanTypescriptTransformer\Laravel\Types\TsAbstractPaginatedType;
 use djfhe\PHPStanTypescriptTransformer\TsTransformer;
 use PHPStan\Analyser\Scope;
 use PHPStan\Reflection\ReflectionProvider;

@@ -1,6 +1,6 @@
 <?php
 
-namespace djfhe\PHPStanTypescriptTransformer\PHPStan\Typescript\TypescriptTypes\Laravel;
+namespace djfhe\PHPStanTypescriptTransformer\Laravel\Types;
 
 use djfhe\PHPStanTypescriptTransformer\TsType;
 
