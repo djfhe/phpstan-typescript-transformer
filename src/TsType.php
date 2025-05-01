@@ -8,6 +8,7 @@ use djfhe\PHPStanTypescriptTransformer\TsPrinter\TsTypePrinter;
 abstract class TsType {
 
   private ?string $name = null;
+  private bool $optional = false;
 
   /**
    * @var array<string,?string>
@@ -33,6 +34,17 @@ abstract class TsType {
   protected function genericParameters(): array
   {
     return [];
+  }
+
+  public function optional(bool $optional = true): static
+  {
+    $this->optional = $optional;
+    return $this;
+  }
+
+  public function isOptional(): bool
+  {
+    return $this->optional;
   }
 
   /**

@@ -16,11 +16,11 @@ class TsObjectPropertyType extends TsType
     {
         $propertyName = $this->key;
 
-        // Check if the property name needs to be quoted, e.g. if it contains spaces.
+        // Check if the property name needs to be quoted, e.g. if it contains spaces or special characters
         if (preg_match('/^[$_a-zA-Z][$_a-zA-Z0-9]*$/', $propertyName) !== 1) {
             $propertyName = "'{$propertyName}'";
         }
 
-        return $propertyName . ($this->optional ? '?' : '') . ': ' . $this->value->printTypeString();
+        return $propertyName . ($this->optional || $this->value->isOptional() ? '?' : '') . ': ' . $this->value->printTypeString();
     }
 }
