@@ -28,7 +28,11 @@ class TsUnionType extends TsType
     protected function typeDefinition(): string
     {
         if (count($this->types) === 1) {
-            return $this->types[0]->printTypeString();
+            // get first element of array, this can be sparse, so we need to use array_pop
+            /** @var TsType $type */
+            $type = array_pop($this->types);
+
+            return $type->printTypeString();
         }
 
         return '(' . implode(' | ', array_map(fn(TsType $type) => $type->printTypeString(), $this->types)) . ')';
