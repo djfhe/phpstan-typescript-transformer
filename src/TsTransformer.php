@@ -93,7 +93,7 @@ class TsTransformer
     $cache = self::getCache();
 
     if ($cache->contains($type)) {
-      return $cache[$type];
+      return clone $cache[$type];
     }
 
     if (self::$visiting->contains($type)) {

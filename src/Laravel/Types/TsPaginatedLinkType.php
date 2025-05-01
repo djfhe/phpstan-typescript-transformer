@@ -2,13 +2,10 @@
 
 namespace djfhe\PHPStanTypescriptTransformer\Laravel\Types;
 
-use djfhe\PHPStanTypescriptTransformer\IsSingleton;
 use djfhe\PHPStanTypescriptTransformer\TsType;
 
 class TsPaginatedLinkType extends TsType
 {
-  use IsSingleton;
-
     public function __construct() {}
 
     protected function typeDefinition(): string
