@@ -27,6 +27,10 @@ class TsUnionType extends TsType
 
     protected function typeDefinition(): string
     {
+        if (count($this->types) === 1) {
+            return $this->types[0]->printTypeString();
+        }
+
         return '(' . implode(' | ', array_map(fn(TsType $type) => $type->printTypeString(), $this->types)) . ')';
     }
 }
