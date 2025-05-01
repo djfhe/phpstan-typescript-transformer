@@ -1,16 +1,16 @@
 <?php
 
-namespace djfhe\PHPStanTypescriptTransformer\LaravelData\Transformer;
+namespace djfhe\PHPStanTypescriptTransformer\Laravel\Transformer;
 
-use djfhe\PHPStanTypescriptTransformer\TsType;
-use djfhe\PHPStanTypescriptTransformer\TsTypeTransformerContract;
 use djfhe\PHPStanTypescriptTransformer\Laravel\Types\TsAbstractPaginatedType;
 use djfhe\PHPStanTypescriptTransformer\TsTransformer;
+use djfhe\PHPStanTypescriptTransformer\TsType;
+use djfhe\PHPStanTypescriptTransformer\TsTypeTransformerContract;
 use PHPStan\Analyser\Scope;
 use PHPStan\Reflection\ReflectionProvider;
 use PHPStan\Type\Type;
 
-class LaravelDataPaginatedParser implements TsTypeTransformerContract
+class LaravelPaginatedParser implements TsTypeTransformerContract
 {
     public static function canTransform(Type $type, Scope $scope, ReflectionProvider $reflectionProvider): bool {
       if (!$type instanceof \PHPStan\Type\UnionType) {
