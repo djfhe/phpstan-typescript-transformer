@@ -14,3 +14,15 @@ services:
     class: djfhe\PHPStanTypescriptTransformer\Laravel\Rules\ControllerInertiaReturnRule
     tags:
       - phpstan.rules.rule
+  -
+    class: djfhe\PHPStanTypescriptTransformer\Laravel\DynamicReturnTypeExtensions\InertiaReturnPropTypeExtension
+    tags:
+      - phpstan.broker.dynamicStaticMethodReturnTypeExtension
+  -
+    class: djfhe\PHPStanTypescriptTransformer\Laravel\DynamicReturnTypeExtensions\InertiaRenderReturnTypeExtension
+    tags:
+      - phpstan.broker.dynamicStaticMethodReturnTypeExtension
+  -
+    class: djfhe\PHPStanTypescriptTransformer\Laravel\DynamicReturnTypeExtensions\InertiaHelperReturnTypeExtension
+    tags:
+      - phpstan.broker.dynamicFunctionReturnTypeExtension

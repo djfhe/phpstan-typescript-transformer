@@ -5,7 +5,9 @@ declare(strict_types=1);
 namespace djfhe\PHPStanTypescriptTransformer\Laravel\Rules;
 
 use djfhe\PHPStanTypescriptTransformer\Base\Types\TsObjectType;
+use djfhe\PHPStanTypescriptTransformer\Base\Types\TsRecordType;
 use djfhe\PHPStanTypescriptTransformer\Base\Types\TsUnionType;
+use djfhe\PHPStanTypescriptTransformer\Laravel\PhpstanTypes\InertiaReturnType;
 use djfhe\PHPStanTypescriptTransformer\TsPrinter\TsTypePrinter;
 use djfhe\PHPStanTypescriptTransformer\TsTransformer;
 use PhpParser\Node;
@@ -41,27 +43,21 @@ class ControllerInertiaReturnRule implements \PHPStan\Rules\Rule
             return [];
         }
 
-        $returns = $node->getReturnStatements();
-
         /**
          * @var array<array{0: ?\PhpParser\Node\Expr, 1: Scope}>
          */
-        $args = array_map(function (ReturnStatement $return) use ($scope) {
-            return [$this->getInertiaReturnStatementArgs($return->getReturnNode(), $scope), $return->getScope()];
-        }, $returns);
+        $returns = array_map(function (ReturnStatement $return) use ($scope) {
+            return [$return->getReturnNode()->expr, $scope];
+        }, $node->getReturnStatements());
 
         /**
          * @var array<array{0: \PhpParser\Node\Expr, 1: Scope}>
          */
-        $args = array_filter($args, function (array $arg) {
+        $args = array_filter($returns, function (array $arg) {
           $expr = $arg[0];
 
           if ($expr === null) {
               return false;
-          }
-
-          if ($expr instanceof \PhpParser\Node\Expr\Array_) {
-              return count($expr->items) > 0;
           }
 
           return true;
@@ -77,9 +73,18 @@ class ControllerInertiaReturnRule implements \PHPStan\Rules\Rule
             $returnValue = $arg[0];
             $returnScope = $arg[1];
 
-            $type = TsTransformer::transformExpression($returnValue, $returnScope, $this->reflectionProvider);
-            
-            $returnUnionType->add($type);
+            $phpstanType = $returnScope->getType($returnValue);
+
+            if (!$phpstanType instanceof InertiaReturnType) {
+                continue;
+            }
+
+            if ($phpstanType->getProps() === null) {
+                $returnUnionType->add(TsRecordType::empty());
+            } else {
+                $parsedType = TsTransformer::transform($phpstanType->getProps(), $returnScope, $this->reflectionProvider);
+                $returnUnionType->add($parsedType);
+            }
         }
 
         $reflection = $scope->getClassReflection();
@@ -109,101 +114,10 @@ class ControllerInertiaReturnRule implements \PHPStan\Rules\Rule
     }
 
     /**
-     * @return array<\PhpParser\Node\Stmt\Return_>
+     * @param 5 $a
      */
-    protected function collectReturnStatements(\PhpParser\Node\Stmt\ClassMethod $method): array
+    function test(int $a): int
     {
-        $returnStatements = [];
-
-        if ($method->stmts === null) {
-            return $returnStatements;
-        }
-
-        foreach ($method->stmts as $stmt) {
-            if (! $stmt instanceof \PhpParser\Node\Stmt\Return_) {
-                continue;
-            }
-
-            $returnStatements[] = $stmt;
-        }
-
-        return $returnStatements;
-    }
-
-    protected function getInertiaFuncCallArgs(\PhpParser\Node\Expr\FuncCall $funcCall, Scope $scope): ?\PhpParser\Node\Expr
-    {
-        if (! $funcCall->name instanceof \PhpParser\Node\Name) {
-            return null;
-        }
-
-        if (!$this->reflectionProvider->hasFunction($funcCall->name, $scope)) {
-            return null;
-        }
-
-        $type = $this->reflectionProvider->getFunction($funcCall->name, $scope);
-        
-        if ($type->getName() !== 'inertia') {
-            return null;
-        }
-
-        if (count($funcCall->args) !== 2) {
-            return null;
-        }
-
-        $inertiaArg = $funcCall->args[1];
-
-        if (! $inertiaArg instanceof \PhpParser\Node\Arg) {
-            return null;
-        }
-
-        return $inertiaArg->value;
-    }
-
-    protected function getInertiaStaticCallArgs(\PhpParser\Node\Expr\StaticCall $staticCall): ?\PhpParser\Node\Expr
-    {
-        
-        if (! $staticCall->class instanceof \PhpParser\Node\Name\FullyQualified) {
-            return null;
-        }
-
-        if ($staticCall->class->name !== 'Inertia\\Inertia') {
-            return null;
-        }
-
-        if (! $staticCall->name instanceof \PhpParser\Node\Identifier) {
-            return null;
-        }
-
-        if ($staticCall->name->name !== 'render') {
-            return null;
-        }
-
-        if (count($staticCall->args) !== 2) {
-            return null;
-        }
-
-        $inertiaArg = $staticCall->args[1];
-
-        if (! $inertiaArg instanceof \PhpParser\Node\Arg) {
-            return null;
-        }
-
-        return $inertiaArg->value;
-    }
-
-    protected function getInertiaReturnStatementArgs(\PhpParser\Node\Stmt\Return_ $returnStatement, Scope $scope): ?\PhpParser\Node\Expr
-    {
-        $inertiaExpr = $returnStatement->expr;
-
-        if ($inertiaExpr instanceof \PhpParser\Node\Expr\FuncCall) {
-            return $this->getInertiaFuncCallArgs($inertiaExpr, $scope);
-        }
-
-
-        if ($inertiaExpr instanceof \PhpParser\Node\Expr\StaticCall) {
-            return $this->getInertiaStaticCallArgs($inertiaExpr);
-        }
-
-        return null;
+        return $a;
     }
 }

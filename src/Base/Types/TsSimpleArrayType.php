@@ -9,12 +9,12 @@ use djfhe\PHPStanTypescriptTransformer\TsType;
  */
 class TsSimpleArrayType extends TsType
 {
-    public function __construct(
-      protected TsType $valueType
-    ) {}
+  public function __construct(
+    protected TsType $valueType
+  ) {}
 
-    protected function typeDefinition(): string
-    {
-        return "{$this->valueType->printTypeString()}[]";
-    }
+  protected function typeDefinition(): string
+  {
+    return "{$this->valueType->printTypeString()}[]";
+  }
 }

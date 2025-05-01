@@ -15,4 +15,9 @@ class TsRecordType extends TsType
     {
         return "Record<{$this->keyType->printTypeString()}, {$this->valueType->printTypeString()}>";
     }
+
+    public static function empty(): TsRecordType
+    {
+        return new TsRecordType(new TsNeverType(), new TsNeverType());
+    }
 }
