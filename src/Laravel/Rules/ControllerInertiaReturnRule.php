@@ -46,8 +46,8 @@ class ControllerInertiaReturnRule implements \PHPStan\Rules\Rule
         /**
          * @var array<array{0: ?\PhpParser\Node\Expr, 1: Scope}>
          */
-        $returns = array_map(function (ReturnStatement $return) use ($scope) {
-            return [$return->getReturnNode()->expr, $scope];
+        $returns = array_map(function (ReturnStatement $return) {
+            return [$return->getReturnNode()->expr, $return->getScope()];
         }, $node->getReturnStatements());
 
         /**
