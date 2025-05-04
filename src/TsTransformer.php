@@ -7,41 +7,41 @@ use PHPStan\Analyser\Scope;
 use PHPStan\Reflection\ReflectionProvider;
 use PHPStan\Type\Type;
 use PHPStan\Type\VerbosityLevel;
-use SplObjectStorage;
 
 class TsTransformer
 {
   /**
-   * @var ?array<class-string<TsTypeTransformerContract>>
+   * @var array<class-string<TsTypeTransformerContract>>
    */
-  protected static ?array $registry = null;
+  protected static array $registry;
 
   /**
-   * @var ?SplObjectStorage<Type,TsType>
+   * @var array<string,TsType>
    */
-  protected static ?SplObjectStorage $cache = null;
+  protected static array $cache;
 
   /**
-   * @var SplObjectStorage<Type, never>
+   * @var array<string, null>
    */
-  protected static SplObjectStorage $visiting;
+  protected static array $visiting;
 
   /**
-   * @var SplObjectStorage<Type,TsCyclicType>
+   * @var array<string,TsCyclicType>
    */
-  protected static SplObjectStorage $cyclic;
+  protected static array $cyclic;
 
   /**
    * @return array<class-string<TsTypeTransformerContract>>
    */
   protected static function init(): array
   {
-    if (self::$registry !== null) {
+    if (isset(self::$registry)) {
       return self::$registry;
     }
 
-    self::$visiting = new SplObjectStorage();
-    self::$cyclic = new SplObjectStorage();
+    self::$visiting = [];
+    self::$cyclic = [];
+    self::$cache = [];
 
     self::$registry = [];
 
@@ -65,18 +65,6 @@ class TsTransformer
     }
 
     return self::$registry;
-  }
-
-  /**
-   * @return SplObjectStorage<Type,TsType>
-   */
-  protected static function getCache(): SplObjectStorage
-  {
-    if (self::$cache === null) {
-      self::$cache = new SplObjectStorage();
-    }
-
-    return self::$cache;
   }
 
   public static function printType(Type $type): string
@@ -119,6 +107,11 @@ class TsTransformer
     $message = is_array($message) ? implode($glue, $message) : $message;
 
     echo $message . "\n";
+  }
+
+  protected static function cacheKey(Type $type): string
+  {
+    return $type->describe(VerbosityLevel::cache());
   }
 
   /**
@@ -164,27 +157,26 @@ class TsTransformer
     self::$logDepth++;
     $transformers = self::init();
 
-    $cache = self::getCache();
+    $typeCacheKey = self::cacheKey($type);
 
-    if ($cache->contains($type)) {
+    if (array_key_exists($typeCacheKey, self::$cache)) {
       self::debug($type, [
         Logger::colorize('Cache hit!', foreground: 'yellow'),
       ]);
 
       self::$logDepth--;
-      return clone $cache[$type];
+      return clone self::$cache[$typeCacheKey];
     }
 
-    if (self::$visiting->contains($type)) {
-      if (self::$cyclic->contains($type)) {
+    if (array_key_exists($typeCacheKey, self::$visiting)) {
+      if (array_key_exists($typeCacheKey, self::$cyclic)) {
         throw new \Exception('Cyclic type not resolved');
       }
 
       $cyclic = new TsCyclicType();
 
-      self::$cyclic->attach($type, $cyclic);
-
-      $cache[$type] = $cyclic;
+      self::$cyclic[$typeCacheKey] = $cyclic;
+      self::$cache[$typeCacheKey] = $cyclic;
 
       self::debug($type, [
         Logger::colorize('Cyclic type detected, Reference returned!', foreground: 'yellow'),
@@ -194,7 +186,7 @@ class TsTransformer
       return $cyclic;
     }
 
-    self::$visiting->attach($type);
+    self::$visiting[$typeCacheKey] = null;
 
     $candidates = [];
     foreach ($transformers as $transformer) {
@@ -240,16 +232,17 @@ class TsTransformer
       return $transformed;
     }
 
-    $cache[$type] = $transformed;
+    self::$cache[$typeCacheKey] = $transformed;
 
-    self::$visiting->detach($type);
+    unset(self::$visiting[$typeCacheKey]);
 
-    if (self::$cyclic->contains($type)) {
-      $cyclic = self::$cyclic[$type];
+    if (array_key_exists($typeCacheKey, self::$cyclic)) {
+      $cyclic = self::$cyclic[$typeCacheKey];
       $cyclic->referencedType = $transformed;
-      
-      self::$cyclic->detach($type);
+
+      unset(self::$cyclic[$typeCacheKey]);
     }
+    
     return $transformed;
   }
 }
