@@ -79,20 +79,99 @@ class TsTransformer
     return self::$cache;
   }
 
+  public static function printType(Type $type): string
+  {
+    $description = $type->describe(VerbosityLevel::value());
+    $classString = $type::class;
+    return "[{$classString}]: {$description}";
+  }
+
+  protected static int $logDepth = -1;
+  
+  /**
+   * @param string|array<string|int|float|bool|null> $message
+   */
+  public static function log(string|array $message, string $glue = ' '): void
+  {
+    if (self::$logDepth < 0) {
+      return;
+    }
+
+    if (is_array($message)) {
+      $message = array_map(function ($item) {
+        if (is_string($item)) {
+          return $item;
+        }
+
+        if (is_bool($item)) {
+          return $item ? 'true' : 'false';
+        }
+
+        if (is_int($item) || is_float($item)) {
+          return (string)$item;
+        }
+
+        return null;
+      }, $message);
+      $message = array_filter($message, fn($item) => is_string($item) && $item !== '');
+    }
+
+    $message = is_array($message) ? implode($glue, $message) : $message;
+
+    echo $message . "\n";
+  }
+
+  /**
+   * @param Type $type
+   * @param string|array<string|int|float|bool|null> $message
+   */
+  public static function debug(Type $type, string|array $message): void
+  {
+    if (self::$logDepth < 0) {
+      return;
+    }
+
+    $indent = str_repeat(' ', self::$logDepth * 2);
+    $prefix = self::$logDepth > 0 ? "\u{21B3}" : '';
+    $typeString = Logger::colorize(self::printType($type), foreground: 'green');
+    
+    $message = is_array($message) ? $message : [$message];
+
+    self::log([
+      $indent,
+      $prefix,
+      $typeString,
+      '-',
+      ...$message,
+    ]);
+  }
+
   public static function transformExpression(\PhpParser\Node\Expr $expr, Scope $scope, ReflectionProvider $reflectionProvider): TsType
   {
     $type = $scope->getType($expr);
+    self::log([
+      'Parsing expression at line:',
+      Logger::colorize($expr->getLine(), foreground: 'cyan'),
+      'with type:',
+      Logger::colorize(self::printType($type), foreground: 'green'),
+    ]);
 
     return self::transform($type, $scope, $reflectionProvider);
   }
 
   public static function transform(Type $type, Scope $scope, ReflectionProvider $reflectionProvider): TsType
   {
+    self::$logDepth++;
     $transformers = self::init();
 
     $cache = self::getCache();
 
     if ($cache->contains($type)) {
+      self::debug($type, [
+        Logger::colorize('Cache hit!', foreground: 'yellow'),
+      ]);
+
+      self::$logDepth--;
       return clone $cache[$type];
     }
 
@@ -107,6 +186,11 @@ class TsTransformer
 
       $cache[$type] = $cyclic;
 
+      self::debug($type, [
+        Logger::colorize('Cyclic type detected, Reference returned!', foreground: 'yellow'),
+      ]);
+
+      self::$logDepth--;
       return $cyclic;
     }
 
@@ -128,17 +212,31 @@ class TsTransformer
 
     $transformed = null;
 
-    if (count($candidates) === 1) {
-      $transformed = $candidates[0]::transform($type, $scope, $reflectionProvider);
-
-      $cache[$type] = $transformed;
-    } else {
+    if (count($candidates) > 1) {
       usort($candidates, fn($a, $b) => $b::transformPriority($type, $scope, $reflectionProvider, $candidates) <=> $a::transformPriority($type, $scope, $reflectionProvider, $candidates));
-  
-      $transformed = $candidates[0]::transform($type, $scope, $reflectionProvider);  
     }
 
+    if (count($candidates) === 1) {
+      self::debug($type, [
+        'using',
+        Logger::colorize($candidates[0], foreground: 'yellow'),
+      ]);
+
+    }  else {
+      self::debug($type, [
+        'candidates:',
+        Logger::colorize('candidates:' . count($candidates), foreground: 'red'),
+        '-',
+        'using',
+        Logger::colorize($candidates[0], foreground: 'yellow'),
+      ]);
+    }
+
+    $transformed = $candidates[0]::transform($type, $scope, $reflectionProvider);
+    self::$logDepth--;
+
     if ($transformed instanceof TsCyclicType) {
+      // will be returned by the transform function itself and is therefor cached.
       return $transformed;
     }
 
@@ -152,7 +250,6 @@ class TsTransformer
       
       self::$cyclic->detach($type);
     }
-
     return $transformed;
   }
 }
