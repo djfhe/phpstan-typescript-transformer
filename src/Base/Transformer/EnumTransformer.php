@@ -4,7 +4,7 @@ namespace djfhe\PHPStanTypescriptTransformer\Base\Transformer;
 
 use djfhe\PHPStanTypescriptTransformer\TsType;
 use djfhe\PHPStanTypescriptTransformer\TsTypeTransformerContract;
-use djfhe\PHPStanTypescriptTransformer\Base\Types\TsScalarType;
+use djfhe\PHPStanTypescriptTransformer\Base\Types\TsLiteralType;
 use djfhe\PHPStanTypescriptTransformer\Base\Types\TsUnionType;
 use djfhe\PHPStanTypescriptTransformer\TsTransformer;
 use PHPStan\Analyser\Scope;
@@ -32,7 +32,7 @@ class EnumTransformer implements TsTypeTransformerContract
       
       for ($i = 0; $i < count($cases); $i++) {
         $backingType = $cases[$i]->getBackingValueType();
-        $tsType = $backingType !== null ? TsTransformer::transform($backingType, $scope, $reflectionProvider) : new TsScalarType((string) $i);
+        $tsType = $backingType !== null ? TsTransformer::transform($backingType, $scope, $reflectionProvider) : new TsLiteralType((string) $i);
         $tsCases[] = $tsType;
       }
 

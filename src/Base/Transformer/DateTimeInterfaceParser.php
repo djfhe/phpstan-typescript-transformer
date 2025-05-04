@@ -3,7 +3,7 @@
 namespace djfhe\PHPStanTypescriptTransformer\Base\Transformer;
 
 use djfhe\PHPStanTypescriptTransformer\TsTypeTransformerContract;
-use djfhe\PHPStanTypescriptTransformer\Base\Types\TsScalarType;
+use djfhe\PHPStanTypescriptTransformer\Base\Types\TsLiteralType;
 use PHPStan\Analyser\Scope;
 use PHPStan\Reflection\ReflectionProvider;
 use PHPStan\Type\Type;
@@ -29,8 +29,8 @@ class DateTimeInterfaceParser implements TsTypeTransformerContract
         return true;
     }
 
-    public static function transform(Type $type, Scope $scope, ReflectionProvider $reflectionProvider): TsScalarType {
-        return new TsScalarType('string');
+    public static function transform(Type $type, Scope $scope, ReflectionProvider $reflectionProvider): TsLiteralType {
+        return new TsLiteralType('string');
     }
 
     public static function transformPriority(Type $type, Scope $scope, ReflectionProvider $reflectionProvider, array $candidates): int {

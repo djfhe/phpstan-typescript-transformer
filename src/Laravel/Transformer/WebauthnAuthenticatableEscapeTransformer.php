@@ -3,7 +3,7 @@
 namespace djfhe\PHPStanTypescriptTransformer\Laravel\Transformer;
 
 use djfhe\PHPStanTypescriptTransformer\TsTypeTransformerContract;
-use djfhe\PHPStanTypescriptTransformer\Base\Types\TsScalarType;
+use djfhe\PHPStanTypescriptTransformer\Base\Types\TsLiteralType;
 use PHPStan\Analyser\Scope;
 use PHPStan\Reflection\ReflectionProvider;
 use PHPStan\Type\Type;
@@ -26,9 +26,9 @@ class WebauthnAuthenticatableEscapeTransformer implements TsTypeTransformerContr
       return in_array($type->getClassName(), self::$escapedTypes, true);
     }
 
-    public static function transform(Type $type, Scope $scope, ReflectionProvider $reflectionProvider): TsScalarType
+    public static function transform(Type $type, Scope $scope, ReflectionProvider $reflectionProvider): TsLiteralType
     {
-      return new TsScalarType('unknown');
+      return new TsLiteralType('unknown');
     }
 
     public static function transformPriority(Type $type, Scope $scope, ReflectionProvider $reflectionProvider, array $candidates): int {

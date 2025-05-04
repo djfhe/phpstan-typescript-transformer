@@ -5,7 +5,7 @@ namespace djfhe\PHPStanTypescriptTransformer\Laravel\Transformer;
 use djfhe\PHPStanTypescriptTransformer\Base\Types\TsObjectPropertyType;
 use djfhe\PHPStanTypescriptTransformer\Base\Types\TsObjectType;
 use djfhe\PHPStanTypescriptTransformer\TsTypeTransformerContract;
-use djfhe\PHPStanTypescriptTransformer\Base\Types\TsScalarType;
+use djfhe\PHPStanTypescriptTransformer\Base\Types\TsLiteralType;
 use djfhe\PHPStanTypescriptTransformer\TsTransformer;
 use Illuminate\Database\Eloquent\Model;
 use PHPStan\Analyser\Scope;
@@ -29,14 +29,14 @@ class LaravelModelTransformer implements TsTypeTransformerContract
       return $reflection->is(Model::class);
     }
 
-    public static function transform(Type $type, Scope $scope, ReflectionProvider $reflectionProvider): TsScalarType|TsObjectType
+    public static function transform(Type $type, Scope $scope, ReflectionProvider $reflectionProvider): TsLiteralType|TsObjectType
     {
       /** @var \PHPStan\Type\ObjectType $type */
 
       $classReflection = $type->getClassReflection();
 
       if ($classReflection === null) {
-        return new TsScalarType('unknown');
+        return new TsLiteralType('unknown');
       }
 
       $props = LaravelModelHelper::getModelProperties($classReflection);
@@ -44,7 +44,7 @@ class LaravelModelTransformer implements TsTypeTransformerContract
       $relations = LaravelModelHelper::getModelRelations($classReflection);
 
       if ($props === null && $accessors === null && $relations === null) {
-        return new TsScalarType('unknown');
+        return new TsLiteralType('unknown');
       }
 
       $props = $props ?? [];
