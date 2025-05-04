@@ -9,6 +9,7 @@ use PHPStan\Type\Type;
 use PHPStan\Analyser\Scope;
 use PHPStan\Reflection\ReflectionProvider;
 use PHPStan\Type\ArrayType;
+use PHPStan\Type\StringType;
 
 /**
  * A simple homogeneous array type. For example: `string[]`, `number[]`, `(string | number)[]`, `never[]`, etc.
@@ -20,9 +21,7 @@ class TsSimpleArrayTransformer implements TsTypeTransformerContract
             return false;
         }
 
-        $keyType = $type->getKeyType();
-
-        return $keyType instanceof \PHPStan\Type\IntegerType;
+        return !$type->getKeyType()->isInteger()->no();
     }
 
     public static function transform(Type $type, Scope $scope, ReflectionProvider $reflectionProvider): TsSimpleArrayType {

@@ -21,12 +21,12 @@ class LaravelDataPaginatedTransformer implements TsTypeTransformerContract
 
       $unionTypes = $type->getTypes();
 
-      if (count($unionTypes) !== 2) {
-        return false;
-      }
+      // if (count($unionTypes) !== 2) {
+      //   return false;
+      // }
 
       foreach ($unionTypes as $unionType) {
-        if (!$unionType instanceof \PHPStan\Type\ObjectType) {
+        if (!$unionType instanceof \PHPStan\Type\ObjectType && !$unionType instanceof \PHPStan\Type\ArrayType) {
           return false;
         }
       }
@@ -40,10 +40,14 @@ class LaravelDataPaginatedTransformer implements TsTypeTransformerContract
     }
 
     /**
-     * @param \PHPStan\Type\ObjectType[] $types
+     * @param (\PHPStan\Type\ObjectType | \PHPStan\Type\ArrayType)[] $types
      */
     protected static function getPaginator(array $types, ReflectionProvider $reflectionProvider): ?Type {
       $paginator = array_filter($types, function ($type) use ($reflectionProvider) {
+        if (!$type instanceof \PHPStan\Type\ObjectType) {
+          return false;
+        }
+
         if ($type->getClassName() === 'Illuminate\Pagination\AbstractPaginator') {
           return true;
         }
@@ -57,11 +61,7 @@ class LaravelDataPaginatedTransformer implements TsTypeTransformerContract
         return $reflection->isSubclassOfClass($reflectionProvider->getClass('Illuminate\Pagination\AbstractPaginator'));
       });
 
-      if (count($paginator) === 1) {
-        return array_pop($paginator);
-      }
-
-      return null;
+      return array_pop($paginator);
     }
 
     /**
@@ -74,11 +74,7 @@ class LaravelDataPaginatedTransformer implements TsTypeTransformerContract
         return $type->isIterable()->yes();
       });
 
-      if (count($types) !== 1) {
-        return null;
-      }
-
-      return array_pop($types)->getIterableValueType();
+      return array_pop($types)?->getIterableValueType();
     }
 
     public static function transform(Type $type, Scope $scope, ReflectionProvider $reflectionProvider): TsType {

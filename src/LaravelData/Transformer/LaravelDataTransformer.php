@@ -12,6 +12,7 @@ use PHPStan\Reflection\ReflectionProvider;
 use djfhe\PHPStanTypescriptTransformer\TsType;
 use djfhe\PHPStanTypescriptTransformer\Base\Types\TsObjectPropertyType;
 use djfhe\PHPStanTypescriptTransformer\Base\Types\TsObjectType;
+use djfhe\PHPStanTypescriptTransformer\Base\Types\TsLiteralType;
 use djfhe\PHPStanTypescriptTransformer\TsTransformer;
 use PHPStan\Analyser\OutOfClassScope;
 use ReflectionProperty;
@@ -147,7 +148,25 @@ class LaravelDataTransformer implements TsTypeTransformerContract
 
       assert($arg !== null);
 
-      return TsTransformer::transform($arg, $scope, $reflectionProvider);
+      // $arg is a string or constant string type. if it we would transform it via ::transform,
+      // we would get a string with the content as its type. E.g.:
+      // #[LiteralTypeScriptType('{ a: string }')]
+      // public mixed $foo
+      // would be transformed to:
+      // foo: '{ a: string }'
+       // which is wrong. We need to directly handle the string content here.
+
+       if (!$arg->isString()->yes()) {
+         return null;
+       }
+
+       if ($arg instanceof \PHPStan\Type\Constant\ConstantStringType) {
+         $arg = $arg->getValue();
+       } else {
+         $arg = 'unknown';
+       }
+
+       return new TsLiteralType($arg);
     }
 
     public static function transformPriority(Type $type, Scope $scope, ReflectionProvider $reflectionProvider, array $candidates): int
