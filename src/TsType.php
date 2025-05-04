@@ -47,6 +47,13 @@ abstract class TsType {
     return $this->optional;
   }
 
+  public function clone(): static
+  {
+    $this->genericParametersCache = null;
+    $this->optional = false;
+    return clone $this;
+  }
+
   /**
    * @return array<string,?string>
    */

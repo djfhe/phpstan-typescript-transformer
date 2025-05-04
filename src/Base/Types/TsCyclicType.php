@@ -17,6 +17,11 @@ class TsCyclicType extends TsType
     return $this->referencedType->getName();
   }
 
+  public function clone(): static
+  {
+    return $this;
+  }
+
   protected function typeDefinition(): string
   {
     if ($this->referencedType === null) {

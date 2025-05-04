@@ -126,7 +126,7 @@ class TsTransformer
 
     $indent = str_repeat(' ', self::$logDepth * 2);
     $prefix = self::$logDepth > 0 ? "\u{21B3}" : '';
-    $typeString = Logger::colorize(self::printType($type), foreground: 'green');
+    $typeString = Logger::colorize(self::printType($type), foreground: self::$logDepth === 0 ? 'purple' : 'green');
     
     $message = is_array($message) ? $message : [$message];
 
@@ -165,7 +165,7 @@ class TsTransformer
       ]);
 
       self::$logDepth--;
-      return clone self::$cache[$typeCacheKey];
+      return self::$cache[$typeCacheKey]->clone();
     }
 
     if (array_key_exists($typeCacheKey, self::$visiting)) {
@@ -196,10 +196,11 @@ class TsTransformer
     }
 
     if (count($candidates) === 0) {
-      $class = $type::class;
-      $value = $type->describe(VerbosityLevel::value());
+      self::debug($type, [
+        Logger::colorize('No transformer found!', foreground: 'red'),
+      ]);
 
-      throw new \Exception("No mapper found for type: {$class} with value: {$value}");
+      throw new \Exception("No transformer found!");
     }
 
     $transformed = null;
