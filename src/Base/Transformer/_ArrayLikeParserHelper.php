@@ -13,7 +13,7 @@ class _ArrayLikeParserHelper
 {
     public static function transform(Type $keyType, Type $valueType, Scope $scope, ReflectionProvider $reflectionProvider): TsSimpleArrayType|TsRecordType
     {
-        if ($keyType->isInteger()->yes()) {
+        if (!$keyType->isInteger()->no()) {
             return new TsSimpleArrayType(TsTransformer::transform($valueType, $scope, $reflectionProvider));
         }
 
