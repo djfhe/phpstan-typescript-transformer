@@ -6,10 +6,8 @@ use djfhe\PHPStanTypescriptTransformer\Laravel\PhpstanTypes\InertiaReturnType;
 use PhpParser\Node\Expr\StaticCall;
 use PHPStan\Analyser\Scope;
 use PHPStan\Reflection\MethodReflection;
-use PHPStan\Reflection\ReflectionProvider;
 use PHPStan\Type\DynamicStaticMethodReturnTypeExtension;
 use PHPStan\Type\Type;
-use PHPStan\Type\VerbosityLevel;
 
 class InertiaRenderReturnTypeExtension implements DynamicStaticMethodReturnTypeExtension
 { 

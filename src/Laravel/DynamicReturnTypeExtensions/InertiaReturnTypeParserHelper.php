@@ -2,10 +2,7 @@
 
 namespace djfhe\PHPStanTypescriptTransformer\Laravel\DynamicReturnTypeExtensions;
 
-use djfhe\PHPStanTypescriptTransformer\TsTransformer;
 use PHPStan\Analyser\Scope;
-use PHPStan\Reflection\ReflectionProvider;
-use PHPStan\Type\ClosureType;
 use PHPStan\Type\Type;
 
 final class InertiaReturnTypeParserHelper
